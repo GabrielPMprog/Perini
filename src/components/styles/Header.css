@@ -1,0 +1,16 @@
+.headerContainer {
+  height: 15vh;
+  width: 100%;
+  border-bottom: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+}
+
+.listItems{ 
+display: flex;
+gap: 2rem;
+list-style: none;
+
+}
