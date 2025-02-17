@@ -1,213 +1,126 @@
-import { useState } from "react";
-import Finance from "financejs";
+import React, { useState } from "react";
 
 import "./calculatorStyles/loanCalculator.css";
 
-function LoanCalculator() {
-  const [propertyValue, setPropertyValue] = useState("");
-  const [entryValue, setEntryValue] = useState("");
-  const [interestAnualRate, setInterestAnualRate] = useState("");
-  const [interestMonthRate, setInterestMonthRate] = useState("");
-  const [formattedPropertyValue, setFormattedPropertyValue] = useState("");
-  const [formattedEntryValue, setFormattedEntryValue] = useState("");
-  const [financialValue, setFinancialValue] = useState("");
-  const [timeValue, setTimeValue] = useState("");
-  const [totalPayment, setTotalPayment] = useState("");
-  const [totalInterest, setTotalInterest] = useState("");
-  const [totalAmortization, setTotalAmortization] = useState("");
+interface Parcela {
+  mes: number;
+  saldoDevedor: number;
+  pagamento: number;
+  amortizacao: number;
+  juros: number;
+}
 
-  // const finance = new Finance();
+const LoanCalculator: React.FC = () => {
+  const [valorImovel, setValorImovel] = useState<number>(250000);
+  const [entrada, setEntrada] = useState<number>(6000);
+  const [taxaJuros, setTaxaJuros] = useState<number>(0.008);
+  const [prazo, setPrazo] = useState<number>(420);
 
-  // TRANSFORMANDO NÚMERO EM MOEDA
-  const formatCurrencyMoney = (value: number) => {
-    return value.toLocaleString("pt-br", {
-      currency: "BRL",
+  const financiamento = valorImovel - entrada;
+  const amortizacaoMensal = financiamento / prazo;
+
+  const formatCurrency = (value: number): string => {
+    return value.toLocaleString("pt-BR", {
       style: "currency",
+      currency: "BRL",
     });
   };
 
-  // TRANSFORMANDO NÚMERO EM MOEDA SEM R$
-  const formatCurrency = (value: number) => {
-    return value.toLocaleString("pt-br", { minimumFractionDigits: 2 });
+  let totalPagamento = 0;
+  let totalJuros = 0;
+
+  const gerarTabela = (): Parcela[] => {
+    let saldoDevedor = financiamento;
+    let tabela: Parcela[] = [];
+    for (let mes = 1; mes <= prazo; mes++) {
+      let juros = saldoDevedor * taxaJuros;
+      let pagamento = amortizacaoMensal + juros;
+      saldoDevedor -= amortizacaoMensal;
+      totalPagamento += pagamento;
+      totalJuros += juros;
+      tabela.push({
+        mes,
+        saldoDevedor,
+        pagamento,
+        amortizacao: amortizacaoMensal,
+        juros,
+      });
+    }
+    return tabela;
   };
 
-  // TRANSFORMANDO NÚMERO EM PORCENTAGEM
-  const formatPercentage = (value: number) => {
-    return `${value.toFixed(2)}%`;
-  };
-
-  const handlePropertyBlur = () => {
-    const numericValue = Number(propertyValue);
-    setFormattedPropertyValue(formatCurrency(numericValue));
-    updateFinancialValue(numericValue, Number(entryValue));
-  };
-
-  const handlePropertyFocus = () => {
-    setFormattedPropertyValue(propertyValue);
-  };
-
-  const handlePropertyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "");
-    setPropertyValue(value);
-    setFormattedPropertyValue(value);
-    updateFinancialValue(Number(value), Number(entryValue));
-  };
-
-  const handleEntryBlur = () => {
-    const numericValue = Number(entryValue);
-    setFormattedEntryValue(formatCurrency(numericValue));
-    updateFinancialValue(Number(propertyValue), numericValue);
-  };
-
-  const handleEntryFocus = () => {
-    setFormattedEntryValue(entryValue);
-  };
-
-  const handleEntryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "");
-    setEntryValue(value);
-    setFormattedEntryValue(value);
-    updateFinancialValue(Number(propertyValue), Number(value));
-  };
-
-  const handleInterestBlur = () => {
-    const numericValue = Number(interestAnualRate);
-    const monthlyRate = numericValue / 12;
-    setInterestMonthRate(formatPercentage(monthlyRate));
-    setInterestAnualRate(formatPercentage(numericValue));
-  };
-
-  const handleInterestFocus = () => {
-    setInterestAnualRate(interestAnualRate.replace("%", ""));
-  };
-
-  const handleInterestChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^\d.]/g, "");
-    setInterestAnualRate(value);
-    setInterestMonthRate(formatPercentage(Number(value) / 12));
-  };
-
-  const handleMonthlyInterestChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = e.target.value.replace(/[^\d.]/g, "");
-    setInterestMonthRate(value);
-    setInterestAnualRate((Number(value) * 12).toFixed(2));
-  };
-
-  const updateFinancialValue = (propertyValue: number, entryValue: number) => {
-    const financialValue = propertyValue - entryValue;
-    setFinancialValue(financialValue.toString());
-  };
-
-  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "");
-    setTimeValue(value);
-  };
-
-  const calculateResults = () => {
-    const P = 244000;  // Valor financiado
-    const i = 0.008;   // Taxa de juros mensal (0.80% = 0.008)
-    const n = 420;     // Número de meses
-    
-    const PMT = P * (i / (1 - Math.pow(1 + i, -n)));
-    const totalPago = PMT * n;
-    const totalJuros = totalPago - P;
-    
-    console.log("Parcela Mensal (PMT):", PMT.toFixed(2));
-    console.log("Total Pago:", totalPago.toFixed(2));
-    console.log("Total de Juros:", totalJuros.toFixed(2));
-    // setTotalPayment(formatCurrencyMoney(totalPaid));
-    // setTotalInterest(formatCurrencyMoney(totalInterestPaid));
-    // setTotalAmortization(formatCurrencyMoney(principal));
-  };
+  const tabelaFinanciamento = gerarTabela();
 
   return (
-    <div className="loanCalculatorContainer">
-      <h1>Dados do Financiamento</h1>
-
-      <div className="inputContainer">
-        <label htmlFor="" className="inputCalculator">
-          {" "}
-          Valor do Imóvel
-        </label>
+    <div className="financiamento-container">
+      <h2>Simulador de Financiamento</h2>
+      <label>
+        Valor do Imóvel:{" "}
         <input
-          type="text"
-          value={formattedPropertyValue}
-          onChange={handlePropertyChange}
-          onBlur={handlePropertyBlur}
-          onFocus={handlePropertyFocus}
+          type="number"
+          value={valorImovel}
+          onChange={(e) => setValorImovel(Number(e.target.value))}
         />
-      </div>
-
-      <div className="inputContainer">
-        <label htmlFor="" className="inputCalculator">
-          {" "}
-          Entrada
-        </label>
+      </label>
+      <label>
+        Entrada:{" "}
         <input
-          type="text"
-          value={formattedEntryValue}
-          onChange={handleEntryChange}
-          onBlur={handleEntryBlur}
-          onFocus={handleEntryFocus}
+          type="number"
+          value={entrada}
+          onChange={(e) => setEntrada(Number(e.target.value))}
         />
-      </div>
-
-      <div className="inputContainer">
-        <label htmlFor="" className="inputCalculator">
-          {" "}
-          Taxa de Juros Anual (%)
-        </label>
+      </label>
+      <label>
+        Taxa de Juros (ao mês):{" "}
         <input
-          type="text"
-          value={interestAnualRate}
-          onChange={handleInterestChange}
-          onBlur={handleInterestBlur}
-          onFocus={handleInterestFocus}
+          type="number"
+          value={taxaJuros}
+          step="0.001"
+          onChange={(e) => setTaxaJuros(Number(e.target.value))}
         />
-      </div>
-
-      <div className="inputContainer">
-        <label htmlFor="" className="inputCalculator">
-          {" "}
-          Taxa de Juros Mensal (%)
-        </label>
+      </label>
+      <label>
+        Prazo (meses):{" "}
         <input
-          type="text"
-          value={interestMonthRate}
-          onChange={handleMonthlyInterestChange}
+          type="number"
+          value={prazo}
+          onChange={(e) => setPrazo(Number(e.target.value))}
         />
-      </div>
+      </label>
 
-      <div className="inputContainer">
-        <label htmlFor="" className="inputCalculator">
-          {" "}
-          Tempo (meses)
-        </label>
-        <input type="text" value={timeValue} onChange={handleTimeChange} />
-      </div>
+      <h3>Resultados:</h3>
+      <p>Valor Financiado: {formatCurrency(financiamento)}</p>
+      <p>Total a Pagar: {formatCurrency(totalPagamento)}</p>
+      <p>Total de Juros: {formatCurrency(totalJuros)}</p>
+      <p>Amortização Mensal: {formatCurrency(amortizacaoMensal)}</p>
 
-      <div className="inputContainer">
-        <label htmlFor="" className="inputCalculator">
-          {" "}
-          Valor do Financiamento{" "}
-        </label>
-        <input
-          type="text"
-          value={formatCurrency(Number(financialValue))}
-          readOnly
-        />
-      </div>
-
-      <button onClick={calculateResults}>Calcular</button>
-
-      <h3>Resultados</h3>
-      <p>Total a Pagar: {totalPayment}</p>
-      <p>Total de Juros: {totalInterest}</p>
-      <p>Total de Amortização: {totalAmortization}</p>
+      <h3>Tabela de Financiamento</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Mês</th>
+            <th>Saldo Devedor</th>
+            <th>Pagamento</th>
+            <th>Amortização</th>
+            <th>Juros</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tabelaFinanciamento.map(
+            ({ mes, saldoDevedor, pagamento, amortizacao, juros }) => (
+              <tr key={mes}>
+                <td>{mes}</td>
+                <td>{formatCurrency(saldoDevedor)}</td>
+                <td>{formatCurrency(pagamento)}</td>
+                <td>{formatCurrency(amortizacao)}</td>
+                <td>{formatCurrency(juros)}</td>
+              </tr>
+            )
+          )}
+        </tbody>
+      </table>
     </div>
   );
-}
+};
 
 export default LoanCalculator;
