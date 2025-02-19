@@ -6,6 +6,7 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
+  height: fit-content;
 }
 
 .financiamento-container h2 {
@@ -52,4 +53,35 @@
   font-size: 1.1em;
   font-weight: bold;
   margin: 10px 0;
+}
+
+.toggle-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.toggle-button:hover {
+  background-color: #0056b3;
+}
+
+.table-container {
+  overflow: hidden;
+  transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+.table-container.hidden {
+  max-height: 0;
+  opacity: 0;
+}
+
+.table-container.visible {
+  max-height: 1000px; /* valor grande para garantir que a tabela seja visível */
+  opacity: 1;
 }

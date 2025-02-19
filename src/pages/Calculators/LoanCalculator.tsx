@@ -20,7 +20,7 @@ const LoanCalculator: React.FC = () => {
   const { valorImovel, setValorImovel, prazo, setPrazo, pagamento, setPagamento, totalPagamento, setTotalPagamento } = imovelContext;
   const [entrada, setEntrada] = useState<number>(6000);
   const [taxaJuros, setTaxaJuros] = useState<number>(0.8);
- 
+  const [isTableVisible, setIsTableVisible] = useState<boolean>(true);
 
   const financiamento = valorImovel - entrada;
   const amortizacaoMensal = financiamento / prazo;
@@ -54,7 +54,7 @@ const LoanCalculator: React.FC = () => {
       });
     }
    
-setTotalPagamento(totalPago);
+    setTotalPagamento(totalPago);
 
     return tabela;
   };
@@ -63,11 +63,14 @@ setTotalPagamento(totalPago);
     const tabelaFinanciamento = gerarTabela();
     if (tabelaFinanciamento.length > 0) {
       setPagamento(tabelaFinanciamento[0].pagamento); // Definir o valor do primeiro pagamento no contexto
-      
     }
   }, [valorImovel, entrada, taxaJuros, prazo]);
 
   const tabelaFinanciamento = gerarTabela();
+
+  const handleToggleTable = () => {
+    setIsTableVisible(!isTableVisible);
+  };
 
   return (
     <div className="financiamento-container">
@@ -92,9 +95,8 @@ setTotalPagamento(totalPago);
         Taxa de Juros (ao mês):
         <input
           type="number"
-          placeholder={taxaJuros.toString()}
-          step="0.001"
           onChange={(e) => setTaxaJuros(Number(e.target.value))}
+          placeholder={taxaJuros.toString()}
         />
       </label>
       <label>
@@ -112,34 +114,39 @@ setTotalPagamento(totalPago);
       <p>Total de Juros: {formatCurrency(totalJuros)}</p>
       <p>Amortização Mensal: {formatCurrency(amortizacaoMensal)}</p>
 
-      <h3>Tabela de Financiamento</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Mês</th>
-            <th>Saldo Devedor</th>
-            <th>Pagamento</th>
-            <th>Amortização</th>
-            <th>Juros</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tabelaFinanciamento.map(
-            ({ mes, saldoDevedor, pagamento, amortizacao, juros }) => (
-              <tr key={mes}>
-                <td>{mes}</td>
-                <td>{formatCurrency(saldoDevedor)}</td>
-                <td>{formatCurrency(pagamento)}</td>
-                <td>{formatCurrency(amortizacao)}</td>
-                <td>{formatCurrency(juros)}</td>
-              </tr>
-            )
-          )}
-        </tbody>
-      </table>
+      <button className="toggle-button" onClick={handleToggleTable}>
+        {isTableVisible ? "Ocultar Tabela" : "Mostrar Tabela"}
+      </button>
+
+      <div className={`table-container ${isTableVisible ? "visible" : "hidden"}`}>
+        <h3>Tabela de Financiamento</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Mês</th>
+              <th>Saldo Devedor</th>
+              <th>Pagamento</th>
+              <th>Amortização</th>
+              <th>Juros</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tabelaFinanciamento.map(
+              ({ mes, saldoDevedor, pagamento, amortizacao, juros }) => (
+                <tr key={mes}>
+                  <td>{mes}</td>
+                  <td>{formatCurrency(saldoDevedor)}</td>
+                  <td>{formatCurrency(pagamento)}</td>
+                  <td>{formatCurrency(amortizacao)}</td>
+                  <td>{formatCurrency(juros)}</td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
 
 export default LoanCalculator;
-

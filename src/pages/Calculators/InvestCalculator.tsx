@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ImovelContext } from "./context/imovelContext";
 import "./calculatorStyles/investCalculator.css";
 
@@ -18,37 +18,39 @@ const InvestCalculator: React.FC = () => {
   const [qtdInvestida, setQtdInvestida] = useState<number>(0);
   const [capacidadeAporte, setCapacidadeAporte] = useState<number>(3500);
   const [rentabilidade, setRentabilidade] = useState<number>(0.007);
+  const [reajusteAnual, setReajusteAnual] = useState<number>(0.05);
   const [valeFinanciar, setValeFinanciar] = useState<boolean>(true);
 
-  const {
-    valorImovel,
-    pagamento,
-    totalPagamento,
-  } = imovelContext;
-  // const [disponivelParaInvestir, setDisponivelParaInvestir] = useState<number>(0);
+  const { valorImovel, prazo, pagamento, totalPagamento } = imovelContext;
 
-  
-  // let saldoInvestido = qtdInvestida;
-  let retornoInvestimento = 0;
-  let valorizacaoImovel = valorImovel;
-  // const reajusteMensal = Math.pow(1 + reajusteAnual, 1 / 12) - 1;
+  const quantidadeDisponivel = capacidadeAporte - pagamento;
 
-  const calcularValorFuturo = (
-    PV: number,
-    r: number,
-    n: number,
-    PMT: number
-  ): number => {
-    const valorFuturo =
-      PV * Math.pow(1 + r, n) + PMT * ((Math.pow(1 + r, n) - 1) / r);
+  const calcularValorFuturo = (PV: number, r: number, n: number, PMT: number): number => {
+    const valorFuturo = PV * Math.pow(1 + r, n) + PMT * ((Math.pow(1 + r, n) - 1) / r);
     return valorFuturo;
   };
 
-  const melhorOpcao =
-    retornoInvestimento > valorizacaoImovel ? "ALUGAR" : "FINANCIAR";
-  const corOpcao = melhorOpcao === "ALUGAR" ? "#2a9d8f" : "#f4a261";
+  const calcularValorizacaoImovel = (valorInicial: number, reajusteAnual: number, prazo: number): number => {
+    const reajusteMensal = Math.pow(1 + reajusteAnual, 1 / 12) - 1;
+    let valorFinal = valorInicial;
+    for (let mes = 1; mes <= prazo; mes++) {
+      valorFinal *= 1 + reajusteMensal;
+      valorFinal = parseFloat(valorFinal.toFixed(2)); // Arredondar a cada iteração
+    }
+    return valorFinal;
+  };
 
-  const disponivelParaInvestir = capacidadeAporte - pagamento;
+  useEffect(() => {
+    const retornoInvestimento = calcularValorFuturo(qtdInvestida, rentabilidade, prazo, quantidadeDisponivel);
+    const valorizacaoImovel = calcularValorizacaoImovel(valorImovel, reajusteAnual, prazo);
+    setValeFinanciar(retornoInvestimento > valorizacaoImovel);
+  }, [qtdInvestida, rentabilidade, prazo, quantidadeDisponivel, valorImovel, reajusteAnual]);
+
+  const retornoInvestimento = calcularValorFuturo(qtdInvestida, rentabilidade, prazo, quantidadeDisponivel);
+  const valorizacaoImovel = calcularValorizacaoImovel(valorImovel, reajusteAnual, prazo);
+
+  const melhorOpcao = retornoInvestimento > valorizacaoImovel ? "ALUGAR" : "FINANCIAR";
+  const corOpcao = melhorOpcao === "ALUGAR" ? "#2a9d8f" : "#f4a261";
 
   return (
     <div className="investContainer">
@@ -82,11 +84,11 @@ const InvestCalculator: React.FC = () => {
             </td>
           </tr>
           <tr>
-            <td>Disponivel para investir</td>
+            <td>Disponível para investir</td>
             <td>
               <input
                 type="string"
-                value={formatCurrency(disponivelParaInvestir)}
+                value={formatCurrency(quantidadeDisponivel)}
                 readOnly
               />
             </td>
@@ -112,7 +114,6 @@ const InvestCalculator: React.FC = () => {
               />
             </td>
           </tr>
-
           <tr>
             <td>Retorno dos Investimentos</td>
             <td>{formatCurrency(retornoInvestimento)}</td>
