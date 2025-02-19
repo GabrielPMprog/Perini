@@ -1,7 +1,8 @@
-.rentContainer{
-    background-color: #f9f9f9;
-    font-family: Arial, sans-serif;
+.rentContainer {
+  background-color: #f9f9f9;
+  font-family: Arial, sans-serif;
   max-width: 800px;
+  height: fit-content;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ddd;
@@ -9,48 +10,50 @@
 }
 
 .rentContainer h2 {
-    text-align: center;
-    color: #333;
-  }
-  
-  .rentContainer label {
-    display: block;
-    margin: 10px 0;
-    font-weight: bold;
-  }
-  
-  .rentContainer input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .rentContainer table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .rentContainer th, .rentContainer td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-  }
-  
-  .rentContainer th {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .rentContainer tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-  
-  .rentContainer p {
-    font-size: 1.1em;
-    font-weight: bold;
-    margin: 10px 0;
-  }
-  
+  text-align: center;
+  color: #333;
+}
+
+.rentContainer label {
+  display: block;
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.rentContainer input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.rentContainer table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.rentContainer th,
+.rentContainer td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.rentContainer th {
+  background-color: #007bff;
+  color: white;
+}
+
+.rentContainer tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.rentContainer p {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+

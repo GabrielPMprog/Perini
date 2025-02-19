@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-
+import React, { useState, useContext, useEffect } from "react";
+import { ImovelContext } from "./context/imovelContext";
 import "./calculatorStyles/loanCalculator.css";
 
 interface Parcela {
@@ -11,10 +11,16 @@ interface Parcela {
 }
 
 const LoanCalculator: React.FC = () => {
-  const [valorImovel, setValorImovel] = useState<number>(250000);
+  const imovelContext = useContext(ImovelContext);
+
+  if (!imovelContext) {
+    return null; // ou algum fallback
+  }
+
+  const { valorImovel, setValorImovel, prazo, setPrazo, pagamento, setPagamento } = imovelContext;
   const [entrada, setEntrada] = useState<number>(6000);
-  const [taxaJuros, setTaxaJuros] = useState<number>(0.008);
-  const [prazo, setPrazo] = useState<number>(420);
+  const [taxaJuros, setTaxaJuros] = useState<number>(0.8);
+ 
 
   const financiamento = valorImovel - entrada;
   const amortizacaoMensal = financiamento / prazo;
@@ -33,15 +39,16 @@ const LoanCalculator: React.FC = () => {
     let saldoDevedor = financiamento;
     let tabela: Parcela[] = [];
     for (let mes = 1; mes <= prazo; mes++) {
-      let juros = saldoDevedor * taxaJuros;
-      let pagamento = amortizacaoMensal + juros;
+      const taxaJurosMensal = taxaJuros / 100;
+      let juros = saldoDevedor * taxaJurosMensal;
+      let pagamentoMensal = amortizacaoMensal + juros;
       saldoDevedor -= amortizacaoMensal;
-      totalPagamento += pagamento;
+      totalPagamento += pagamentoMensal;
       totalJuros += juros;
       tabela.push({
         mes,
         saldoDevedor,
-        pagamento,
+        pagamento: pagamentoMensal,
         amortizacao: amortizacaoMensal,
         juros,
       });
@@ -49,42 +56,49 @@ const LoanCalculator: React.FC = () => {
     return tabela;
   };
 
+  useEffect(() => {
+    const tabelaFinanciamento = gerarTabela();
+    if (tabelaFinanciamento.length > 0) {
+      setPagamento(tabelaFinanciamento[0].pagamento); // Definir o valor do primeiro pagamento no contexto
+    }
+  }, [valorImovel, entrada, taxaJuros, prazo]);
+
   const tabelaFinanciamento = gerarTabela();
 
   return (
     <div className="financiamento-container">
       <h2>Simulador de Financiamento</h2>
       <label>
-        Valor do Imóvel:{" "}
+        Valor do Imóvel:
         <input
           type="number"
-          value={valorImovel}
           onChange={(e) => setValorImovel(Number(e.target.value))}
+          placeholder={formatCurrency(valorImovel)}
         />
       </label>
       <label>
-        Entrada:{" "}
+        Entrada:
         <input
           type="number"
-          value={entrada}
           onChange={(e) => setEntrada(Number(e.target.value))}
+          placeholder={formatCurrency(entrada)}
         />
       </label>
       <label>
-        Taxa de Juros (ao mês):{" "}
+        Taxa de Juros (ao mês):
         <input
           type="number"
-          value={taxaJuros}
+          placeholder={taxaJuros.toString()}
           step="0.001"
           onChange={(e) => setTaxaJuros(Number(e.target.value))}
         />
       </label>
       <label>
-        Prazo (meses):{" "}
+        Prazo (meses):
         <input
           type="number"
-          value={prazo}
           onChange={(e) => setPrazo(Number(e.target.value))}
+          placeholder={prazo.toString()}
         />
       </label>
 
@@ -124,3 +138,4 @@ const LoanCalculator: React.FC = () => {
 };
 
 export default LoanCalculator;
+

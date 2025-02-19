@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { ImovelContext } from "./context/imovelContext";
-import "./calculatorStyles/rentCalculator.css";
+import "./calculatorStyles/investCalculator.css";
 
 const formatCurrency = (value: number): string => {
   return value.toLocaleString("pt-BR", {
@@ -9,7 +9,7 @@ const formatCurrency = (value: number): string => {
   });
 };
 
-const AlugarOuFinanciar: React.FC = () => {
+const InvestCalculator: React.FC = () => {
   const imovelContext = useContext(ImovelContext);
   if (!imovelContext) {
     return null;
@@ -18,32 +18,42 @@ const AlugarOuFinanciar: React.FC = () => {
   const [qtdInvestida, setQtdInvestida] = useState<number>(0);
   const [capacidadeAporte, setCapacidadeAporte] = useState<number>(3500);
   const [valorAluguel, setValorAluguel] = useState<number>(3100);
-  const [rendimentoMensal, setRendimentoMensal] = useState<number>(0.007);
-  const [reajusteAnual, setReajusteAnual] = useState<number>(0.05);
+  const [rentabilidade, setRentabilidade] = useState<number>(0.007);
   const [consegueFinanciar, setConsegueFinanciar] = useState<boolean>(true);
-  const { valorImovel, setValorImovel, prazo, setPrazo } = imovelContext;
+
+  const { valorImovel, setValorImovel, prazo, setPrazo, pagamento } =
+    imovelContext;
+  // const [disponivelParaInvestir, setDisponivelParaInvestir] = useState<number>(0);
 
   const quantidadeDisponivel = capacidadeAporte - valorAluguel;
-  let saldoInvestido = qtdInvestida;
+  // let saldoInvestido = qtdInvestida;
   let retornoInvestimento = 0;
   let valorizacaoImovel = valorImovel;
-  const reajusteMensal = Math.pow(1 + reajusteAnual, 1 / 12) - 1;
+  // const reajusteMensal = Math.pow(1 + reajusteAnual, 1 / 12) - 1;
 
-  for (let mes = 1; mes <= prazo; mes++) {
-    saldoInvestido *= 1 + rendimentoMensal;
-    saldoInvestido += quantidadeDisponivel;
-    saldoInvestido = parseFloat(saldoInvestido.toFixed(2)); // Arredondar a cada iteração
-    retornoInvestimento = saldoInvestido;
-    valorizacaoImovel *= 1 + reajusteMensal;
-    valorizacaoImovel = parseFloat(valorizacaoImovel.toFixed(2)); // Arredondar a cada iteração
-  }
+  // for (let mes = 1; mes <= prazo; mes++) {
+  //   saldoInvestido *= 1 + rendimentoMensal;
+  //   saldoInvestido += quantidadeDisponivel;
+  //   saldoInvestido = parseFloat(saldoInvestido.toFixed(2)); // Arredondar a cada iteração
+  //   retornoInvestimento = saldoInvestido;
+  //   valorizacaoImovel *= 1 + reajusteMensal;
+  //   valorizacaoImovel = parseFloat(valorizacaoImovel.toFixed(2)); // Arredondar a cada iteração
+  // }
 
-  const melhorOpcao = retornoInvestimento > valorizacaoImovel ? "ALUGAR" : "FINANCIAR";
+  const calcularValorFuturo = (PV: number, r: number, n: number, PMT: number): number => {
+    const valorFuturo = PV * Math.pow(1 + r, n) + PMT * ((Math.pow(1 + r, n) - 1) / r);
+    return valorFuturo;
+  };
+
+  const melhorOpcao =
+    retornoInvestimento > valorizacaoImovel ? "ALUGAR" : "FINANCIAR";
   const corOpcao = melhorOpcao === "ALUGAR" ? "#2a9d8f" : "#f4a261";
 
+  const disponivelParaInvestir = capacidadeAporte - pagamento;
+
   return (
-    <div className="rentContainer">
-      <h2>ALUGAR OU FINANCIAR?</h2>
+    <div className="investContainer">
+      <h2>FINANCIAR E INVESTIR</h2>
       <table>
         <tbody>
           <tr>
@@ -67,34 +77,30 @@ const AlugarOuFinanciar: React.FC = () => {
             </td>
           </tr>
           <tr>
-            <td>Valor do Aluguel</td>
+            <td>Valor da Prestação</td>
             <td>
-              <input
-                type="number"
-                value={valorAluguel}
-                onChange={(e) => setValorAluguel(Number(e.target.value))}
-              />
+              <input type="number" value={pagamento.toFixed(2)} readOnly />
             </td>
           </tr>
           <tr>
-            <td>Rentabilidade dos Investimentos (mês)</td>
+            <td>Disponivel para investir</td>
             <td>
               <input
                 type="number"
                 step="0.001"
-                value={rendimentoMensal}
-                onChange={(e) => setRendimentoMensal(Number(e.target.value))}
+                value={disponivelParaInvestir.toFixed(2)}
+                readOnly
               />
             </td>
           </tr>
           <tr>
-            <td>Reajuste do Imóvel (anual)</td>
+            <td>Rentabilidade dos investimentos</td>
             <td>
               <input
                 type="number"
                 step="0.01"
-                value={reajusteAnual}
-                onChange={(e) => setReajusteAnual(Number(e.target.value))}
+                value={rentabilidade}
+                onChange={(e) => setRentabilidade(Number(e.target.value))}
               />
             </td>
           </tr>
@@ -132,13 +138,29 @@ const AlugarOuFinanciar: React.FC = () => {
           </tr>
           <tr>
             <td>Você consegue financiar?</td>
-            <td style={{ backgroundColor: consegueFinanciar ? "#2a9d8f" : "#e63946", fontWeight: "bold", textAlign: "center", color: "white" }}>
+            <td
+              style={{
+                backgroundColor: consegueFinanciar ? "#2a9d8f" : "#e63946",
+                fontWeight: "bold",
+                textAlign: "center",
+                color: "white",
+              }}
+            >
               {consegueFinanciar ? "SIM" : "NÃO"}
             </td>
           </tr>
           <tr>
             <td>Alugar ou Financiar?</td>
-            <td style={{ backgroundColor: corOpcao, fontWeight: "bold", textAlign: "center", color: "white" }}>{melhorOpcao}</td>
+            <td
+              style={{
+                backgroundColor: corOpcao,
+                fontWeight: "bold",
+                textAlign: "center",
+                color: "white",
+              }}
+            >
+              {melhorOpcao}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -146,4 +168,4 @@ const AlugarOuFinanciar: React.FC = () => {
   );
 };
 
-export default AlugarOuFinanciar;
+export default InvestCalculator;

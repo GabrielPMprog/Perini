@@ -1,0 +1,61 @@
+.investContainer {
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    height: fit-content;
+    margin: 0 auto;
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .investContainer h2 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .investContainer label {
+    display: block;
+    margin: 10px 0;
+    font-weight: bold;
+  }
+  
+  .investContainer input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .investContainer table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .investContainer th,
+  .investContainer td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .investContainer th {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .investContainer tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .investContainer p {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin: 10px 0;
+  }
+  
+  
+  
