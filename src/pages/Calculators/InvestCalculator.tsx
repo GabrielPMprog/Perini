@@ -17,31 +17,30 @@ const InvestCalculator: React.FC = () => {
 
   const [qtdInvestida, setQtdInvestida] = useState<number>(0);
   const [capacidadeAporte, setCapacidadeAporte] = useState<number>(3500);
-  const [valorAluguel, setValorAluguel] = useState<number>(3100);
   const [rentabilidade, setRentabilidade] = useState<number>(0.007);
-  const [consegueFinanciar, setConsegueFinanciar] = useState<boolean>(true);
+  const [valeFinanciar, setValeFinanciar] = useState<boolean>(true);
 
-  const { valorImovel, setValorImovel, prazo, setPrazo, pagamento } =
-    imovelContext;
+  const {
+    valorImovel,
+    pagamento,
+    totalPagamento,
+  } = imovelContext;
   // const [disponivelParaInvestir, setDisponivelParaInvestir] = useState<number>(0);
 
-  const quantidadeDisponivel = capacidadeAporte - valorAluguel;
+  
   // let saldoInvestido = qtdInvestida;
   let retornoInvestimento = 0;
   let valorizacaoImovel = valorImovel;
   // const reajusteMensal = Math.pow(1 + reajusteAnual, 1 / 12) - 1;
 
-  // for (let mes = 1; mes <= prazo; mes++) {
-  //   saldoInvestido *= 1 + rendimentoMensal;
-  //   saldoInvestido += quantidadeDisponivel;
-  //   saldoInvestido = parseFloat(saldoInvestido.toFixed(2)); // Arredondar a cada iteração
-  //   retornoInvestimento = saldoInvestido;
-  //   valorizacaoImovel *= 1 + reajusteMensal;
-  //   valorizacaoImovel = parseFloat(valorizacaoImovel.toFixed(2)); // Arredondar a cada iteração
-  // }
-
-  const calcularValorFuturo = (PV: number, r: number, n: number, PMT: number): number => {
-    const valorFuturo = PV * Math.pow(1 + r, n) + PMT * ((Math.pow(1 + r, n) - 1) / r);
+  const calcularValorFuturo = (
+    PV: number,
+    r: number,
+    n: number,
+    PMT: number
+  ): number => {
+    const valorFuturo =
+      PV * Math.pow(1 + r, n) + PMT * ((Math.pow(1 + r, n) - 1) / r);
     return valorFuturo;
   };
 
@@ -86,9 +85,18 @@ const InvestCalculator: React.FC = () => {
             <td>Disponivel para investir</td>
             <td>
               <input
-                type="number"
-                step="0.001"
-                value={disponivelParaInvestir.toFixed(2)}
+                type="string"
+                value={formatCurrency(disponivelParaInvestir)}
+                readOnly
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>Pagamento Total</td>
+            <td>
+              <input
+                type="string"
+                value={formatCurrency(totalPagamento)}
                 readOnly
               />
             </td>
@@ -104,30 +112,7 @@ const InvestCalculator: React.FC = () => {
               />
             </td>
           </tr>
-          <tr>
-            <td>Prazo (meses)</td>
-            <td>
-              <input
-                type="number"
-                value={prazo}
-                onChange={(e) => setPrazo(Number(e.target.value))}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>Valor do Imóvel</td>
-            <td>
-              <input
-                type="number"
-                value={valorImovel}
-                onChange={(e) => setValorImovel(Number(e.target.value))}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>Quantidade disponível para investir</td>
-            <td>{formatCurrency(quantidadeDisponivel)}</td>
-          </tr>
+
           <tr>
             <td>Retorno dos Investimentos</td>
             <td>{formatCurrency(retornoInvestimento)}</td>
@@ -137,29 +122,16 @@ const InvestCalculator: React.FC = () => {
             <td>{formatCurrency(valorizacaoImovel)}</td>
           </tr>
           <tr>
-            <td>Você consegue financiar?</td>
+            <td>Vale a pena financiar?</td>
             <td
               style={{
-                backgroundColor: consegueFinanciar ? "#2a9d8f" : "#e63946",
+                backgroundColor: valeFinanciar ? "#2a9d8f" : "#e63946",
                 fontWeight: "bold",
                 textAlign: "center",
                 color: "white",
               }}
             >
-              {consegueFinanciar ? "SIM" : "NÃO"}
-            </td>
-          </tr>
-          <tr>
-            <td>Alugar ou Financiar?</td>
-            <td
-              style={{
-                backgroundColor: corOpcao,
-                fontWeight: "bold",
-                textAlign: "center",
-                color: "white",
-              }}
-            >
-              {melhorOpcao}
+              {valeFinanciar ? "SIM" : "NÃO"}
             </td>
           </tr>
         </tbody>

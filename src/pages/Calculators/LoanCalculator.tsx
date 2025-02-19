@@ -17,7 +17,7 @@ const LoanCalculator: React.FC = () => {
     return null; // ou algum fallback
   }
 
-  const { valorImovel, setValorImovel, prazo, setPrazo, pagamento, setPagamento } = imovelContext;
+  const { valorImovel, setValorImovel, prazo, setPrazo, pagamento, setPagamento, totalPagamento, setTotalPagamento } = imovelContext;
   const [entrada, setEntrada] = useState<number>(6000);
   const [taxaJuros, setTaxaJuros] = useState<number>(0.8);
  
@@ -32,7 +32,7 @@ const LoanCalculator: React.FC = () => {
     });
   };
 
-  let totalPagamento = 0;
+  let totalPago = 0;
   let totalJuros = 0;
 
   const gerarTabela = (): Parcela[] => {
@@ -43,7 +43,7 @@ const LoanCalculator: React.FC = () => {
       let juros = saldoDevedor * taxaJurosMensal;
       let pagamentoMensal = amortizacaoMensal + juros;
       saldoDevedor -= amortizacaoMensal;
-      totalPagamento += pagamentoMensal;
+      totalPago += pagamentoMensal;
       totalJuros += juros;
       tabela.push({
         mes,
@@ -53,6 +53,9 @@ const LoanCalculator: React.FC = () => {
         juros,
       });
     }
+   
+setTotalPagamento(totalPago);
+
     return tabela;
   };
 
@@ -60,6 +63,7 @@ const LoanCalculator: React.FC = () => {
     const tabelaFinanciamento = gerarTabela();
     if (tabelaFinanciamento.length > 0) {
       setPagamento(tabelaFinanciamento[0].pagamento); // Definir o valor do primeiro pagamento no contexto
+      
     }
   }, [valorImovel, entrada, taxaJuros, prazo]);
 
