@@ -1,4 +1,30 @@
 .homeContainer {
-  padding-top: 15vh;
+  padding-top: 5vh;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px;
+  background-color: #afc74e;
 }
+
+.homeTextContainer {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #afc74e;
+  height: 70vh;
+  gap: 2rem;
+}
+
+.homeTextContainer h1 {
+  font-size: 2rem;
+  color: white;
+}
+
+.homeTextContainer p {
+  width: 80%;
+  color: white;
+}
+

@@ -9,6 +9,10 @@ const formatCurrency = (value: number): string => {
   });
 };
 
+const parseCurrency = (value: string): number => {
+  return Number(value.replace(/\D/g, "")) / 100;
+};
+
 const AlugarOuFinanciar: React.FC = () => {
   const imovelContext = useContext(ImovelContext);
   if (!imovelContext) {
@@ -32,14 +36,14 @@ const AlugarOuFinanciar: React.FC = () => {
   for (let mes = 1; mes <= prazo; mes++) {
     saldoInvestido *= 1 + rendimentoMensal;
     saldoInvestido += quantidadeDisponivel;
-    saldoInvestido = parseFloat(saldoInvestido.toFixed(2)); // Arredondar a cada iteração
+    saldoInvestido = parseFloat(saldoInvestido.toFixed(2));
     retornoInvestimento = saldoInvestido;
     valorizacaoImovel *= 1 + reajusteMensal;
-    valorizacaoImovel = parseFloat(valorizacaoImovel.toFixed(2)); // Arredondar a cada iteração
+    valorizacaoImovel = parseFloat(valorizacaoImovel.toFixed(2));
   }
 
   const melhorOpcao = retornoInvestimento > valorizacaoImovel ? "ALUGAR" : "FINANCIAR";
-  const corOpcao = melhorOpcao === "ALUGAR" ? "#2a9d8f" : "#f4a261";
+  const corOpcao = melhorOpcao === "ALUGAR" ? "#afc74e" : "#da1616";
 
   return (
     <div className="rentContainer">
@@ -50,9 +54,10 @@ const AlugarOuFinanciar: React.FC = () => {
             <td>Quantidade Investida</td>
             <td>
               <input
-                type="number"
-                value={qtdInvestida}
-                onChange={(e) => setQtdInvestida(Number(e.target.value))}
+                type="text"
+                value={formatCurrency(qtdInvestida)}
+                onChange={(e) => setQtdInvestida(parseCurrency(e.target.value))}
+                onBlur={(e) => setQtdInvestida(parseCurrency(e.target.value))}
               />
             </td>
           </tr>
@@ -60,9 +65,10 @@ const AlugarOuFinanciar: React.FC = () => {
             <td>Capacidade de Aporte</td>
             <td>
               <input
-                type="number"
-                value={capacidadeAporte}
-                onChange={(e) => setCapacidadeAporte(Number(e.target.value))}
+                type="text"
+                value={formatCurrency(capacidadeAporte)}
+                onChange={(e) => setCapacidadeAporte(parseCurrency(e.target.value))}
+                onBlur={(e) => setCapacidadeAporte(parseCurrency(e.target.value))}
               />
             </td>
           </tr>
@@ -70,9 +76,10 @@ const AlugarOuFinanciar: React.FC = () => {
             <td>Valor do Aluguel</td>
             <td>
               <input
-                type="number"
-                value={valorAluguel}
-                onChange={(e) => setValorAluguel(Number(e.target.value))}
+                type="text"
+                value={formatCurrency(valorAluguel)}
+                onChange={(e) => setValorAluguel(parseCurrency(e.target.value))}
+                onBlur={(e) => setValorAluguel(parseCurrency(e.target.value))}
               />
             </td>
           </tr>
@@ -112,9 +119,10 @@ const AlugarOuFinanciar: React.FC = () => {
             <td>Valor do Imóvel</td>
             <td>
               <input
-                type="number"
-                value={valorImovel}
-                onChange={(e) => setValorImovel(Number(e.target.value))}
+                type="text"
+                value={formatCurrency(valorImovel)}
+                onChange={(e) => setValorImovel(parseCurrency(e.target.value))}
+                onBlur={(e) => setValorImovel(parseCurrency(e.target.value))}
               />
             </td>
           </tr>
@@ -132,7 +140,7 @@ const AlugarOuFinanciar: React.FC = () => {
           </tr>
           <tr>
             <td>Você consegue financiar?</td>
-            <td style={{ backgroundColor: consegueFinanciar ? "#2a9d8f" : "#e63946", fontWeight: "bold", textAlign: "center", color: "white" }}>
+            <td style={{ backgroundColor: consegueFinanciar ? "#afc74e" : "#da1616", fontWeight: "bold", textAlign: "center", color: "white" }}>
               {consegueFinanciar ? "SIM" : "NÃO"}
             </td>
           </tr>

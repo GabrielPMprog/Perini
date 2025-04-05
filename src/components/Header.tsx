@@ -1,20 +1,27 @@
-import "./styles/Header.css";
+import { useState } from "react";
+import logo from "../assets/logo.svg";
+import { FiMenu, FiX } from "react-icons/fi"; // Ícones do menu
+
+import './styles/Header.css';
 
 function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <div className="headerContainer">
-      <div className="logo"></div>
-      <nav>
-        <ul className="listItems">
-          <li>
-            <a href="/">Home</a>
-          </li>
+      <div className="logo">
+        <a href="/"><img src={logo} alt="Logo" /></a>
+      </div>
 
-          <li>
-            <a href="/financial">FINANCIAMENTO X ALGUEL</a>
-          </li>
-          <li>Contato</li>
-          <li>Teste</li>
+      <button className="menuToggle" onClick={() => setMenuOpen(!menuOpen)}>
+        {menuOpen ? <FiX /> : <FiMenu />}
+      </button>
+
+      <nav className={menuOpen ? "navOpen" : ""}>
+        <ul className="listItems">
+      
+          <li><a href="/financial" onClick={() => setMenuOpen(false)}>FINANCIAMENTO X ALUGUEL</a></li>
+          <li><a href="/investimento" onClick={() => setMenuOpen(false)}>SIMULADOR INVESTIMENTO</a></li>
         </ul>
       </nav>
     </div>

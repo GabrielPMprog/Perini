@@ -32,6 +32,10 @@ const LoanCalculator: React.FC = () => {
     });
   };
 
+  const parseCurrency = (value: string): number => {
+    return Number(value.replace(/\D/g, "")) / 100;
+  };
+
   let totalPago = 0;
   let totalJuros = 0;
 
@@ -55,14 +59,13 @@ const LoanCalculator: React.FC = () => {
     }
    
     setTotalPagamento(totalPago);
-
     return tabela;
   };
 
   useEffect(() => {
     const tabelaFinanciamento = gerarTabela();
     if (tabelaFinanciamento.length > 0) {
-      setPagamento(tabelaFinanciamento[0].pagamento); // Definir o valor do primeiro pagamento no contexto
+      setPagamento(tabelaFinanciamento[0].pagamento);
     }
   }, [valorImovel, entrada, taxaJuros, prazo]);
 
@@ -74,44 +77,46 @@ const LoanCalculator: React.FC = () => {
 
   return (
     <div className="financiamento-container">
-      <h2>Simulador de Financiamento</h2>
+      <h2>SIMULADOR DE FINANCIAMENTO</h2>
       <label>
         Valor do Imóvel:
         <input
-          type="number"
-          onChange={(e) => setValorImovel(Number(e.target.value))}
-          placeholder={formatCurrency(valorImovel)}
+          type="text"
+          value={formatCurrency(valorImovel)}
+          onChange={(e) => setValorImovel(parseCurrency(e.target.value))}
+          onBlur={(e) => setValorImovel(parseCurrency(e.target.value))}
         />
       </label>
       <label>
         Entrada:
         <input
-          type="number"
-          onChange={(e) => setEntrada(Number(e.target.value))}
-          placeholder={formatCurrency(entrada)}
+          type="text"
+          value={formatCurrency(entrada)}
+          onChange={(e) => setEntrada(parseCurrency(e.target.value))}
+          onBlur={(e) => setEntrada(parseCurrency(e.target.value))}
         />
       </label>
       <label>
         Taxa de Juros (ao mês):
         <input
           type="number"
+          value={taxaJuros}
           onChange={(e) => setTaxaJuros(Number(e.target.value))}
-          placeholder={taxaJuros.toString()}
         />
       </label>
       <label>
         Prazo (meses):
         <input
           type="number"
+          value={prazo}
           onChange={(e) => setPrazo(Number(e.target.value))}
-          placeholder={prazo.toString()}
         />
       </label>
 
       <h3>Resultados:</h3>
-      <p>Valor Financiado: {formatCurrency(financiamento)}</p>
       <p>Total a Pagar: {formatCurrency(totalPagamento)}</p>
       <p>Total de Juros: {formatCurrency(totalJuros)}</p>
+      <p>Valor Financiado: {formatCurrency(financiamento)}</p>
       <p>Amortização Mensal: {formatCurrency(amortizacaoMensal)}</p>
 
       <button className="toggle-button" onClick={handleToggleTable}>

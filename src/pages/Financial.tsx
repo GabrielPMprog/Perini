@@ -4,7 +4,7 @@ import "./styles/Financial.css";
 import { ImovelProvider } from "./Calculators/context/imovelContext";
 
 // CALCULADORAS
-import LoanCalculator from "./Calculators/LoanCalculator";
+import LoanCalculator from "./Calculators/SimuladorDeFinanciamento";
 import RentCalculator from "./Calculators/RentCalculator";
 import InvestCalculator from "./Calculators/InvestCalculator";
 

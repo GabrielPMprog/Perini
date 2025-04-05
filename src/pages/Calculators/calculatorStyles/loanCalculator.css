@@ -7,6 +7,7 @@
   border-radius: 8px;
   background-color: #f9f9f9;
   height: fit-content;
+
 }
 
 .financiamento-container h2 {
@@ -34,14 +35,15 @@
   margin-top: 20px;
 }
 
-.financiamento-container th, .financiamento-container td {
+.financiamento-container th,
+.financiamento-container td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
 }
 
 .financiamento-container th {
-  background-color: #007bff;
+  background-color: #afc74e;
   color: white;
 }
 
@@ -56,7 +58,7 @@
 }
 
 .toggle-button {
-  background-color: #007bff;
+  background-color: #afc74e;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -68,7 +70,7 @@
 }
 
 .toggle-button:hover {
-  background-color: #0056b3;
+  background-color: #475800;
 }
 
 .table-container {
@@ -82,6 +84,18 @@
 }
 
 .table-container.visible {
-  max-height: 1000px; /* valor grande para garantir que a tabela seja visível */
+  max-height: 1000000000px; /* valor grande para garantir que a tabela seja visível */
   opacity: 1;
+}
+
+@media (max-width:768px){
+
+.financiamento-container {
+  width: 50%;
+}
+
+.table-container.visible {
+overflow-x: scroll;
+}
+
 }
