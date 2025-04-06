@@ -4,24 +4,23 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // COMPONENTS
 import Header from "./components/Header";
 
-//PAGES
+// PAGES
 import Financial from "./pages/Financial";
 import Home from "./pages/Home";
 import Simulator from "./pages/Simulator.tsx";
 
-
 function App() {
   return (
-    <div className="container">
-      <Header />
-      <Router>
+    <Router basename="/Perini"> 
+      <div className="container">
+        <Header />
         <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/investimento" element={<Simulator />}></Route>
-          <Route path="/financial" element={<Financial />}></Route>
+          <Route path="/" element={<Home />} />
+          <Route path="/investimento" element={<Simulator />} />
+          <Route path="/financial" element={<Financial />} />
         </Routes>
-      </Router>
-    </div>
+      </div>
+    </Router>
   );
 }
 
