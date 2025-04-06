@@ -10,7 +10,7 @@ function Header() {
   return (
     <div className="headerContainer">
       <div className="logo">
-        <a href="/"><img src={logo} alt="Logo" /></a>
+        <a href="/Perini/"><img src={logo} alt="Logo" /></a>
       </div>
 
       <button className="menuToggle" onClick={() => setMenuOpen(!menuOpen)}>
@@ -20,8 +20,8 @@ function Header() {
       <nav className={menuOpen ? "navOpen" : ""}>
         <ul className="listItems">
       
-          <li><a href="/financial" onClick={() => setMenuOpen(false)}>FINANCIAMENTO X ALUGUEL</a></li>
-          <li><a href="/investimento" onClick={() => setMenuOpen(false)}>SIMULADOR INVESTIMENTO</a></li>
+          <li><a href="/Perini/financial" onClick={() => setMenuOpen(false)}>FINANCIAMENTO X ALUGUEL</a></li>
+          <li><a href="/Perini/investimento" onClick={() => setMenuOpen(false)}>SIMULADOR INVESTIMENTO</a></li>
         </ul>
       </nav>
     </div>
