@@ -8,6 +8,7 @@ import Header from "./components/Header";
 import Financial from "./pages/Financial";
 import Home from "./pages/Home";
 import Simulator from "./pages/Simulator.tsx";
+import InflationGraphic from "./pages/InflationGraphic";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/investimento" element={<Simulator />} />
           <Route path="/financial" element={<Financial />} />
+          <Route path="/gráfico" element={<InflationGraphic />} />
         </Routes>
       </div>
     </Router>

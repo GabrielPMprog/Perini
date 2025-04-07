@@ -47,9 +47,7 @@
   color: white;
 }
 
-.financiamento-container tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
+
 
 .financiamento-container p {
   font-size: 1.1em;
@@ -88,10 +86,15 @@
   opacity: 1;
 }
 
+.loanTableResult:hover{
+  background-color: #3b3b3b2d;
+}
+
 @media (max-width:768px){
 
 .financiamento-container {
-  width: 50%;
+  max-width: 90vw;
+
 }
 
 .table-container.visible {

@@ -138,7 +138,7 @@ const LoanCalculator: React.FC = () => {
           <tbody>
             {tabelaFinanciamento.map(
               ({ mes, saldoDevedor, pagamento, amortizacao, juros }) => (
-                <tr key={mes}>
+                <tr key={mes} className="loanTableResult">
                   <td>{mes}</td>
                   <td>{formatCurrency(saldoDevedor)}</td>
                   <td>{formatCurrency(pagamento)}</td>

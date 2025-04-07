@@ -41,6 +41,7 @@
     border: 1px solid #ddd;
     padding: 10px;
     text-align: center;
+    
   }
   
   .investContainer th {
@@ -60,9 +61,14 @@
   
   @media (max-width: 768px) {
     .investContainer {
-      width: 50%;
+      width: 90vw;
     }
     
+.investContainer tbody{
+  width: 100%;
+
+}
+
 .investContainer table{
   display: flex;
   align-items: center;

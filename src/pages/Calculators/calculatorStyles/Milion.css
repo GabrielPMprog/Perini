@@ -22,14 +22,21 @@
 ;
 }
 
-.simulador-tabela td {
-  padding: 10px;
-}
-
 .simulador-label {
   font-weight: bold;
   text-align: right;
 
+}
+
+.simulador-campo {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.simulador-campo label {
+  font-weight: bold;
+  margin-bottom: 4px;
 }
 
 .inputContainerInflation{
@@ -60,10 +67,17 @@
 
 .simulador-resultado {
   margin-top: 20px;
-  padding: 15px;
   background: #f8f9fa;
   border-radius: 4px;
-  text-align: center;
-  font-size: 1.2rem;
+  text-align: start;
+display: flex;
+flex-direction: column;
+gap: 1em;
   font-weight: bold;
+}
+
+.investCalcResult{
+
+font-weight: 500;
+
 }

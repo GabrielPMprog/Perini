@@ -56,11 +56,13 @@
   margin: 10px 0;
 }
 
+
+
 @media (max-width: 768px) {
   .rentContainer {
     align-items: center;
     justify-content: center;
-    width: 50%;
+    width: 90vw;
   }
 
   .rentContainer tbody {

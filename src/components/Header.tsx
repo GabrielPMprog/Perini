@@ -22,6 +22,8 @@ function Header() {
       
           <li><a href="/Perini/financial" onClick={() => setMenuOpen(false)}>FINANCIAMENTO X ALUGUEL</a></li>
           <li><a href="/Perini/investimento" onClick={() => setMenuOpen(false)}>SIMULADOR INVESTIMENTO</a></li>
+          <li><a href="/Perini/gráfico" onClick={() => setMenuOpen(false)}>GRÁFICO INFLAÇÃO</a></li>
+
         </ul>
       </nav>
     </div>

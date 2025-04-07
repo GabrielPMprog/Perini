@@ -22,7 +22,7 @@ const AlugarOuFinanciar: React.FC = () => {
   const [qtdInvestida, setQtdInvestida] = useState<number>(0);
   const [capacidadeAporte, setCapacidadeAporte] = useState<number>(3500);
   const [valorAluguel, setValorAluguel] = useState<number>(3100);
-  const [rendimentoMensal, setRendimentoMensal] = useState<number>(0.007);
+  const [rendimentoMensal, setRendimentoMensal] = useState<number>(0.7);
   const [reajusteAnual, setReajusteAnual] = useState<number>(0.05);
   const [consegueFinanciar, setConsegueFinanciar] = useState<boolean>(true);
   const { valorImovel, setValorImovel, prazo, setPrazo } = imovelContext;
@@ -31,10 +31,10 @@ const AlugarOuFinanciar: React.FC = () => {
   let saldoInvestido = qtdInvestida;
   let retornoInvestimento = 0;
   let valorizacaoImovel = valorImovel;
-  const reajusteMensal = Math.pow(1 + reajusteAnual, 1 / 12) - 1;
+  const reajusteMensal = Math.pow(1 + reajusteAnual / 100, 1 / 12) - 1;
 
   for (let mes = 1; mes <= prazo; mes++) {
-    saldoInvestido *= 1 + rendimentoMensal;
+    saldoInvestido *= 1 + rendimentoMensal / 100;
     saldoInvestido += quantidadeDisponivel;
     saldoInvestido = parseFloat(saldoInvestido.toFixed(2));
     retornoInvestimento = saldoInvestido;
@@ -42,7 +42,8 @@ const AlugarOuFinanciar: React.FC = () => {
     valorizacaoImovel = parseFloat(valorizacaoImovel.toFixed(2));
   }
 
-  const melhorOpcao = retornoInvestimento > valorizacaoImovel ? "ALUGAR" : "FINANCIAR";
+  const melhorOpcao =
+    retornoInvestimento > valorizacaoImovel ? "ALUGAR" : "FINANCIAR";
   const corOpcao = melhorOpcao === "ALUGAR" ? "#afc74e" : "#da1616";
 
   return (
@@ -67,8 +68,12 @@ const AlugarOuFinanciar: React.FC = () => {
               <input
                 type="text"
                 value={formatCurrency(capacidadeAporte)}
-                onChange={(e) => setCapacidadeAporte(parseCurrency(e.target.value))}
-                onBlur={(e) => setCapacidadeAporte(parseCurrency(e.target.value))}
+                onChange={(e) =>
+                  setCapacidadeAporte(parseCurrency(e.target.value))
+                }
+                onBlur={(e) =>
+                  setCapacidadeAporte(parseCurrency(e.target.value))
+                }
               />
             </td>
           </tr>
@@ -85,7 +90,7 @@ const AlugarOuFinanciar: React.FC = () => {
           </tr>
           <tr>
             <td>Rentabilidade dos Investimentos (mês)</td>
-            <td>
+            <td className="rendimentoMensalInput">
               <input
                 type="number"
                 step="0.001"
@@ -140,13 +145,29 @@ const AlugarOuFinanciar: React.FC = () => {
           </tr>
           <tr>
             <td>Você consegue financiar?</td>
-            <td style={{ backgroundColor: consegueFinanciar ? "#afc74e" : "#da1616", fontWeight: "bold", textAlign: "center", color: "white" }}>
+            <td
+              style={{
+                backgroundColor: consegueFinanciar ? "#afc74e" : "#da1616",
+                fontWeight: "bold",
+                textAlign: "center",
+                color: "white",
+              }}
+            >
               {consegueFinanciar ? "SIM" : "NÃO"}
             </td>
           </tr>
           <tr>
             <td>Alugar ou Financiar?</td>
-            <td style={{ backgroundColor: corOpcao, fontWeight: "bold", textAlign: "center", color: "white" }}>{melhorOpcao}</td>
+            <td
+              style={{
+                backgroundColor: corOpcao,
+                fontWeight: "bold",
+                textAlign: "center",
+                color: "white",
+              }}
+            >
+              {melhorOpcao}
+            </td>
           </tr>
         </tbody>
       </table>

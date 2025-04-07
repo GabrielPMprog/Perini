@@ -22,6 +22,9 @@ export default function HowMuch() {
     aporteNecessario: 0,
   });
 
+  const [editandoValorInicial, setEditandoValorInicial] = useState(false);
+  const [editandoValorDesejado, setEditandoValorDesejado] = useState(false);
+
   const [tabela, setTabela] = useState<
     Array<{
       mes: number;
@@ -32,7 +35,7 @@ export default function HowMuch() {
     }>
   >([]);
 
-  const [mostrarTabela, setMostrarTabela] = useState(true); // 👈 novo estado
+  const [mostrarTabela, setMostrarTabela] = useState(true);
 
   function calcularAporteCrescente() {
     const rentabilidadeMensal =
@@ -71,17 +74,33 @@ export default function HowMuch() {
     setDados((prev) => ({
       ...prev,
       rentabilidadeReal: parseFloat((rentabilidadeReal * 100).toFixed(5)),
-      valorDesejado: parseFloat(valorDesejadoAjustado.toFixed(2)),
       aporteNecessario: parseFloat(Math.abs(aporteInicial).toFixed(2)),
     }));
 
     setTabela(novaTabela);
-    setMostrarTabela(true); // 👈 mostrar a tabela após calcular
+    setMostrarTabela(true);
   }
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
     setDados((prev) => ({ ...prev, [name]: Number(value) || 0 }));
+  }
+
+  function formatarParaReal(valor: number): string {
+    return valor.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  }
+
+  function desformatarReal(valor: string): number {
+    return Number(
+      valor
+        .replace(/\s/g, "")
+        .replace("R$", "")
+        .replace(/\./g, "")
+        .replace(",", ".")
+    ) || 0;
   }
 
   return (
@@ -92,10 +111,21 @@ export default function HowMuch() {
       <div>
         <label>Valor Inicial:</label>
         <input
-          type="number"
+          type="text"
           name="valorInicial"
-          value={dados.valorInicial}
-          onChange={handleChange}
+          value={
+            editandoValorInicial
+              ? dados.valorInicial
+              : formatarParaReal(dados.valorInicial)
+          }
+          onFocus={() => setEditandoValorInicial(true)}
+          onBlur={() => setEditandoValorInicial(false)}
+          onChange={(e) =>
+            setDados((prev) => ({
+              ...prev,
+              valorInicial: desformatarReal(e.target.value),
+            }))
+          }
           className="border p-2 w-full rounded"
         />
       </div>
@@ -122,10 +152,21 @@ export default function HowMuch() {
       <div>
         <label>Valor Desejado:</label>
         <input
-          type="number"
+          type="text"
           name="valorDesejado"
-          value={dados.valorDesejado}
-          onChange={handleChange}
+          value={
+            editandoValorDesejado
+              ? dados.valorDesejado
+              : formatarParaReal(dados.valorDesejado)
+          }
+          onFocus={() => setEditandoValorDesejado(true)}
+          onBlur={() => setEditandoValorDesejado(false)}
+          onChange={(e) =>
+            setDados((prev) => ({
+              ...prev,
+              valorDesejado: desformatarReal(e.target.value),
+            }))
+          }
           className="border p-2 w-full rounded"
         />
       </div>
@@ -139,10 +180,7 @@ export default function HowMuch() {
           className="border p-2 w-full rounded"
         />
       </div>
-      <button
-        onClick={calcularAporteCrescente}
-        className="calculateButton"
-      >
+      <button onClick={calcularAporteCrescente} className="calculateButton">
         Calcular
       </button>
 
@@ -151,16 +189,14 @@ export default function HowMuch() {
           <div className="resultsContainer">
             <h3 className="font-semibold">Resultados:</h3>
             <p className="text-lg font-bold">
-              Valor Desejado Ajustado: R${" "}
-              {dados.valorDesejado.toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              })}
+              Valor Desejado Ajustado:{" "}
+              {formatarParaReal(
+                dados.valorDesejado * Math.pow(1 + dados.inflacaoAnual / 100, dados.tempoMeses / 12)
+              )}
             </p>
             <p className="text-md">
-              Aporte Inicial Necessário: R${" "}
-              {dados.aporteNecessario.toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              })}
+              Aporte Inicial Necessário:{" "}
+              {formatarParaReal(dados.aporteNecessario)}
             </p>
           </div>
           <button
@@ -189,28 +225,16 @@ export default function HowMuch() {
                 <tr key={linha.mes} className="text-center">
                   <td className="border border-gray-300 p-2">{linha.mes}</td>
                   <td className="border border-gray-300 p-2">
-                    R${" "}
-                    {linha.valorInicial.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                    })}
+                    {formatarParaReal(linha.valorInicial)}
                   </td>
                   <td className="border border-gray-300 p-2">
-                    R${" "}
-                    {linha.aporte.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                    })}
+                    {formatarParaReal(linha.aporte)}
                   </td>
                   <td className="border border-gray-300 p-2">
-                    R${" "}
-                    {linha.juros.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                    })}
+                    {formatarParaReal(linha.juros)}
                   </td>
                   <td className="border border-gray-300 p-2">
-                    R${" "}
-                    {linha.total.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                    })}
+                    {formatarParaReal(linha.total)}
                   </td>
                 </tr>
               ))}
