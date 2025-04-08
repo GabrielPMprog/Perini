@@ -1,99 +1,130 @@
 /* Container principal */
 .investimento-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem;
-    font-family: 'Segoe UI', sans-serif;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: "Segoe UI", sans-serif;
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+.investimento-container h2 {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  color: #1a202c;
+  text-align: center;
+}
+
+.investimento-container h3 {
+  margin-top: 2rem;
+  font-size: 1.25rem;
+  color: #2d3748;
+}
+
+/* Inputs */
+.investimento-input-group {
+  margin-bottom: 1rem;
+}
+
+.investimento-input-group label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.investimento-input-group input {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+/* Botão de toggle da tabela */
+.investimento-toggle-btn {
+  background-color: #afc74e;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.investimento-toggle-btn:hover {
+  background-color: #475800;
+}
+
+/* Animação para mostrar/esconder tabela */
+.investimento-tabela-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
+  max-height: 2000px;
+  opacity: 1;
+  transform: scaleY(1);
+  transform-origin: top;
+}
+
+.investimento-tabela-wrapper.hide {
+  max-height: 0;
+  opacity: 0;
+  transform: scaleY(0.95);
+  pointer-events: none;
+}
+
+/* Estilo da Tabela */
+.investimento-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  min-width: 600px; /* Garante scroll horizontal se necessário */
+}
+
+.investimento-table th,
+.investimento-table td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: right;
+  font-size: 0.95rem;
+}
+
+.investimento-table th {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.investimento-table-row:hover {
+  background-color: #3b3b3b2d;
+}
+
+.graphic {
+  overflow-x: auto;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .investimento-container {
+    max-width: 90vw;
+    padding: 1.5rem;
   }
-  
-  .investimento-container h2 {
-    margin-bottom: 1rem;
-    font-size: 2rem;
-    color: #1a202c;
-  }
-  
-  .investimento-container h3 {
-    margin-top: 2rem;
-    font-size: 1.25rem;
-    color: #2d3748;
-  }
-  
-  /* Inputs */
-  .investimento-input-group {
-    margin-bottom: 1rem;
-  }
-  
-  .investimento-input-group label {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 0.3rem;
-  }
-  
-  .investimento-input-group input {
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
-  
-  /* Botão de toggle da tabela */
-  .investimento-toggle-btn {
-    background-color: #afc74e;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .investimento-toggle-btn:hover {
-    background-color: #475800;
-  }
-  
-  /* Animação para mostrar/esconder tabela */
-  .investimento-tabela-wrapper {
-    overflow: hidden;
-    transition: max-height 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
-    max-height: 2000px;
-    opacity: 1;
-    transform: scaleY(1);
-    transform-origin: top;
-  }
-  
-  .investimento-tabela-wrapper.hide {
-    max-height: 0;
-    opacity: 0;
-    transform: scaleY(0.95);
-    pointer-events: none;
-  }
-  
-  /* Estilo da Tabela */
-  .investimento-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-  }
-  
+
   .investimento-table th,
   .investimento-table td {
-    border: 1px solid #ddd;
-    padding: 0.75rem;
-    text-align: right;
+    padding: 0.5rem;
+    font-size: 0.85rem;
   }
-  
-  .investimento-table th {
-    background-color: #f4f4f4;
-    color: #333;
+
+  .investimento-toggle-btn {
+    font-size: 1rem;
+    padding: 0.6rem;
   }
-  
-  .investimento-table-row:hover {
-    background-color: #3b3b3b2d;
+
+  .graphic {
+    overflow-x: scroll;
   }
-  
-  .graphic{
-overflow-x:visible ;
-  }
+}

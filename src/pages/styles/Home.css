@@ -18,8 +18,29 @@ justify-content: center;
   font-family: sans-serif;
   text-align: end;
   font-weight: 800;
+
 }
 
 .homeTextContainer p{
   font-family: sans-serif;
+}
+
+@media (max-width: 768px) {
+
+.homeTextContainer{
+
+align-items: center
+
+}
+
+  .homeTextContainer h1{
+    font-size: 1.5em;
+    text-align: center;
+  }
+  .homeTextContainer p{
+    text-align: center;
+    font-size: 1.2em;
+    width: 80%
+  }
+  
 }

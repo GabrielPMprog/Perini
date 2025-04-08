@@ -6,6 +6,8 @@
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding-top: 20vh;
+  box-sizing: border-box;
+  overflow-x: auto;
 }
 
 .titulo {
@@ -19,13 +21,12 @@
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
-;
+  min-width: 600px; /* força scroll horizontal em telas pequenas */
 }
 
 .simulador-label {
   font-weight: bold;
   text-align: right;
-
 }
 
 .simulador-campo {
@@ -39,7 +40,7 @@
   margin-bottom: 4px;
 }
 
-.inputContainerInflation{
+.inputContainerInflation {
   padding: 1em 0em;
 }
 
@@ -48,6 +49,7 @@
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
 }
 
 .simulador-botao {
@@ -69,15 +71,29 @@
   margin-top: 20px;
   background: #f8f9fa;
   border-radius: 4px;
+  padding: 16px;
   text-align: start;
-display: flex;
-flex-direction: column;
-gap: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
   font-weight: bold;
 }
 
-.investCalcResult{
+.investCalcResult {
+  font-weight: 500;
+}
 
-font-weight: 500;
+@media (max-width: 768px) {
+  .simulador-container {
+    max-width: 90vw;
+    padding: 16px;
+  }
 
+  .simulador-tabela {
+    font-size: 0.9em;
+  }
+
+  .simulador-botao {
+    font-size: 0.95rem;
+  }
 }

@@ -1,12 +1,14 @@
 .rentContainer {
   background-color: #f9f9f9;
   font-family: Arial, sans-serif;
+  width: 100%;
   max-width: 800px;
-  height: fit-content;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
+  box-sizing: border-box;
+  overflow-x: auto; /* permite rolagem horizontal se necessário */
 }
 
 .rentContainer h2 {
@@ -26,12 +28,14 @@
   margin-top: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
 }
 
 .rentContainer table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  overflow-x: auto;
 }
 
 .rentContainer th,
@@ -39,15 +43,13 @@
   border: 1px solid #ddd;
   padding: 10px;
   text-align: center;
+  font-size: 0.9em;
+  word-break: break-word; /* evita estouro em textos grandes */
 }
 
 .rentContainer th {
   background-color: #007bff;
   color: white;
-}
-
-.rentContainer tr:nth-child(even) {
-  background-color: #f2f2f2;
 }
 
 .rentContainer p {
@@ -56,23 +58,19 @@
   margin: 10px 0;
 }
 
-
-
+/* RESPONSIVO */
 @media (max-width: 768px) {
   .rentContainer {
-    align-items: center;
-    justify-content: center;
     width: 90vw;
+    padding: 15px;
   }
 
-  .rentContainer tbody {
-    display: flex;
-    flex-direction: column;
-
+  .rentContainer table {
+    font-size: 0.85em;
   }
 
   .rentContainer th,
   .rentContainer td {
-width: 50%;
+    padding: 8px;
   }
 }

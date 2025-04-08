@@ -8,7 +8,7 @@ function Home() {
       <div className="homeTextContainer">
         <p>
           Projeto produzido por um fã com inutito de disponibilizar as planilhas do
-          curso viver de renda no dispositivos móveis.
+          curso viver de renda para dispositivos móveis.
         </p>
         <h1>- Gabriel Paiva de Medeiros</h1>
       </div>

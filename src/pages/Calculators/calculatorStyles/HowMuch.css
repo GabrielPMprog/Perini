@@ -7,6 +7,9 @@
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   padding-top: 20vh;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-x: auto; /* scroll horizontal se necessário */
 }
 
 .investirContainer h2 {
@@ -27,6 +30,7 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-bottom: 1rem;
+  box-sizing: border-box;
 }
 
 .calculateButton {
@@ -48,6 +52,7 @@
   cursor: pointer;
   width: 50%;
 }
+
 .investirContainer button:hover {
   background-color: #475800;
 }
@@ -76,10 +81,18 @@
   margin-top: 0.5rem;
 }
 
+/* ENVOLVENDO A TABELA EM UM CONTAINER SCROLLÁVEL */
+.tabela-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 16px;
+  border-radius: 5px;
+}
+
 .investirContainer table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 16px;
+  min-width: 600px; /* força rolagem horizontal no mobile */
 }
 
 .investirContainer th,
@@ -87,6 +100,7 @@ td {
   border: 1px solid #ccc;
   padding: 8px;
   text-align: center;
+  word-break: break-word;
 }
 
 .investirContainer th {
@@ -102,21 +116,25 @@ td {
   background-color: #e2e2e2;
 }
 
-.tabela-container {
-  opacity: 1;
-  max-height: 1000px;
-  overflow: hidden;
-  transition: opacity 0.5s ease, max-height 0.5s ease;
-}
-
 .tabela-container.oculta {
   opacity: 0;
   max-height: 0;
   pointer-events: none;
+  transition: opacity 0.5s ease, max-height 0.5s ease;
 }
 
 @media (max-width: 768px) {
   .investirContainer {
-    max-width: 400px;
+    max-width: 90vw;
+    padding: 15px;
+  }
+
+  .investirContainer table {
+    font-size: 0.9em;
+  }
+
+  .calculateButton,
+  .toggleButton {
+    font-size: 0.95rem;
   }
 }

@@ -7,18 +7,20 @@
   color: rgb(0, 0, 0);
   height: 15vh;
   border-bottom: 1px solid #ccc;
-  overflow-y: hidden;
+  position: relative;
+  z-index: 100;
+  overflow: visible;
 }
 
 /* LOGO Responsiva */
 .logo img {
-  width: 180px; /* Tamanho padrão */
+  width: 180px;
   max-width: 100%;
   height: auto;
   transition: transform 0.3s ease-in-out;
 }
 
-/* Botão do Menu (hamburguer) */
+/* Botão do Menu */
 .menuToggle {
   display: none;
   background: none;
@@ -26,7 +28,7 @@
   font-size: 1.8em;
   color: rgb(0, 0, 0);
   cursor: pointer;
-  z-index: 1000;
+  z-index: 101;
   margin-right: 50px;
 }
 
@@ -45,71 +47,58 @@ nav {
   color: rgb(0, 0, 0);
   text-decoration: none;
   font-size: 1em;
+  transition: color 0.3s;
 }
 
 .listItems li a:hover {
   color: #afc74e;
 }
 
-/* MEDIA QUERY PARA MOBILE */
+/* MENU MOBILE DROPDOWN */
 @media (max-width: 768px) {
   .menuToggle {
     display: block;
   }
 
   nav {
-    display: flex;
-    flex-direction: column;
     position: absolute;
-    top: 0;
-    left: -100%;
+    top: 100%;
+    left: 0;
     width: 100%;
-    height: 100%;
-    background-color: rgb(175, 199, 78, 0.9);
-    padding-top: 80px;
-    transition: left 0.4s ease-in-out;
+    background-color: white;
+    max-height: 0;
+    transition: max-height 0.4s ease-in-out;
+    display: block;
+    z-index: 99;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #ccc;
+    overflow: hidden;
   }
 
   .navOpen {
-    left: 0; /* Faz o menu deslizar para dentro da tela */
+    max-height: 300px;
   }
 
   .listItems {
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 20px;
+    padding: 20px 0;
   }
 
-  /* Animação suave para os itens do menu */
   .listItems li {
     opacity: 0;
-    transform: translateY(-10px);
-    animation: fadeIn 0.4s forwards;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
 
-  .listItems li:nth-child(1) {
-    animation-delay: 0.1s;
-  }
-  .listItems li:nth-child(2) {
-    animation-delay: 0.2s;
-  }
-  .listItems li:nth-child(3) {
-    animation-delay: 0.3s;
-  }
-  .listItems li:nth-child(4) {
-    animation-delay: 0.4s;
+  .navOpen .listItems li {
+    opacity: 1;
+    transform: translateY(0);
   }
 
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Logo menor em telas pequenas */
   .logo img {
-    width: 16rem;
+    width: 160px;
     padding-right: 2em;
   }
 }
