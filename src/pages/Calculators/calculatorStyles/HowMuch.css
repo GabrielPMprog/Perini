@@ -1,7 +1,7 @@
 .investirContainer {
   display: flex;
   flex-direction: column;
-  max-width: 600px;
+  width: 40%;
   margin: auto;
   background-color: white;
   border-radius: 10px;
@@ -9,7 +9,7 @@
   padding-top: 20vh;
   padding: 20px;
   box-sizing: border-box;
-  overflow-x: auto; /* scroll horizontal se necessário */
+  overflow-x: hidden;
 }
 
 .investirContainer h2 {
@@ -33,16 +33,7 @@
   box-sizing: border-box;
 }
 
-.calculateButton {
-  background-color: #afc74e;
-  color: white;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%;
-}
-
+.calculateButton,
 .toggleButton {
   background-color: #afc74e;
   color: white;
@@ -50,7 +41,15 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  width: 100%;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.toggleButton {
   width: 50%;
+  align-self: flex-start;
+  margin-top: 10px;
 }
 
 .investirContainer button:hover {
@@ -81,22 +80,30 @@
   margin-top: 0.5rem;
 }
 
-/* ENVOLVENDO A TABELA EM UM CONTAINER SCROLLÁVEL */
+/* Envolvendo a tabela */
 .tabela-container {
   width: 100%;
-  overflow-x: auto;
   margin-top: 16px;
   border-radius: 5px;
+  overflow-x: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
 }
 
+.tabela-container.oculta {
+  opacity: 0;
+  max-height: 0;
+  pointer-events: none;
+}
+
+/* Estilo da Tabela */
 .investirContainer table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px; /* força rolagem horizontal no mobile */
+  font-size: 1rem;
 }
 
 .investirContainer th,
-td {
+.investirContainer td {
   border: 1px solid #ccc;
   padding: 8px;
   text-align: center;
@@ -116,25 +123,40 @@ td {
   background-color: #e2e2e2;
 }
 
-.tabela-container.oculta {
-  opacity: 0;
-  max-height: 0;
-  pointer-events: none;
-  transition: opacity 0.5s ease, max-height 0.5s ease;
-}
-
-@media (max-width: 768px) {
+/* Responsividade */
+@media (max-width: 1300px) {
   .investirContainer {
-    max-width: 90vw;
+    width: 70%;
     padding: 15px;
   }
 
   .investirContainer table {
-    font-size: 0.9em;
+    font-size: 0.9rem;
   }
 
   .calculateButton,
   .toggleButton {
     font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .investirContainer {
+    width: 90vw;
+    padding: 15px;
+  }
+
+  .investirContainer table {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tabela-container {
+    overflow-x: auto;
+  }
+
+  .investirContainer table {
+    min-width: 600px; /* ativa scroll em celulares menores */
   }
 }

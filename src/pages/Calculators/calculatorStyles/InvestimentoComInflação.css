@@ -5,7 +5,7 @@
   padding: 2rem;
   font-family: "Segoe UI", sans-serif;
   box-sizing: border-box;
-  overflow-x: auto;
+  overflow-x: visible;
 }
 
 .investimento-container h2 {
@@ -59,6 +59,11 @@
   background-color: #475800;
 }
 
+.investimento-table-header th{
+background-color: #afc74e;
+color: white;
+}
+
 /* Animação para mostrar/esconder tabela */
 .investimento-tabela-wrapper {
   overflow-x: auto;
@@ -93,17 +98,14 @@
   font-size: 0.95rem;
 }
 
-.investimento-table th {
-  background-color: #f4f4f4;
-  color: #333;
-}
+
 
 .investimento-table-row:hover {
   background-color: #3b3b3b2d;
 }
 
-.graphic {
-  overflow-x: auto;
+.graphic{
+ overflow: hidden;
 }
 
 /* Responsividade */

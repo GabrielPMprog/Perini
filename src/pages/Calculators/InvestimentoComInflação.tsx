@@ -68,7 +68,7 @@ export default function InvestimentoInflacao() {
           <h3 className="investimento-subtitulo">Tabela</h3>
           <table className="investimento-table" >
             <thead>
-              <tr>
+              <tr className="investimento-table-header">
                 <th>Ano</th>
                 <th>Valor Inicial (do ano)</th>
                 <th>Valor Final (com juros)</th>

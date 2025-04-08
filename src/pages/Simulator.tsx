@@ -6,7 +6,7 @@ import './styles/Simulator.css';
 
 export default function Simulator() {
   return (
-    <div className="simuladorContainer">
+    <div className="mainSimulatorContainer">
       <Milion />
       <Inflation />
       <HowMuch />

@@ -84,13 +84,14 @@
 .table-container.visible {
   max-height: 1000000000px; /* valor grande para garantir que a tabela seja visível */
   opacity: 1;
+  overflow-x: visible;
 }
 
 .loanTableResult:hover{
   background-color: #3b3b3b2d;
 }
 
-@media (max-width:768px){
+@media (max-width:900px){
 
 .financiamento-container {
   max-width: 90vw;

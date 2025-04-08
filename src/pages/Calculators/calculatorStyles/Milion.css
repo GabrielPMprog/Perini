@@ -1,11 +1,11 @@
 .simulador-container {
-  max-width: 600px;
+  width: 25%;
   margin: 0 auto;
   background: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding-top: 20vh;
+height: fit-content;
   box-sizing: border-box;
   overflow-x: auto;
 }
@@ -83,9 +83,10 @@
   font-weight: 500;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .simulador-container {
     max-width: 90vw;
+    width: 70%;
     padding: 16px;
   }
 
