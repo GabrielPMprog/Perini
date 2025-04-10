@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ImovelContext } from "./context/imovelContext";
 import "./calculatorStyles/rentCalculator.css";
 
@@ -6,6 +6,8 @@ const formatCurrency = (value: number): string => {
   return value.toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
   });
 };
 
@@ -23,27 +25,58 @@ const AlugarOuFinanciar: React.FC = () => {
   const [capacidadeAporte, setCapacidadeAporte] = useState<number>(3500);
   const [valorAluguel, setValorAluguel] = useState<number>(3100);
   const [rendimentoMensal, setRendimentoMensal] = useState<number>(0.7);
-  const [reajusteAnual, setReajusteAnual] = useState<number>(0.05);
+  const [reajusteAnual, setReajusteAnual] = useState<number>(5);
   const [consegueFinanciar, setConsegueFinanciar] = useState<boolean>(true);
   const { valorImovel, setValorImovel, prazo, setPrazo } = imovelContext;
 
-  const quantidadeDisponivel = capacidadeAporte - valorAluguel;
-  let saldoInvestido = qtdInvestida;
-  let retornoInvestimento = 0;
-  let valorizacaoImovel = valorImovel;
-  const reajusteMensal = Math.pow(1 + reajusteAnual / 100, 1 / 12) - 1;
+  const [retornoInvestimento, setRetornoInvestimento] = useState<number>(0);
+  const [valorizacaoImovel, setValorizacaoImovel] = useState<number>(valorImovel);
+  const [melhorOpcao, setMelhorOpcao] = useState<string>("");
+  const [quantidadeDisponivel, setQuantidadeDisponivel] = useState<number>(0);
 
-  for (let mes = 1; mes <= prazo; mes++) {
-    saldoInvestido *= 1 + rendimentoMensal / 100;
-    saldoInvestido += quantidadeDisponivel;
-    saldoInvestido = parseFloat(saldoInvestido.toFixed(2));
-    retornoInvestimento = saldoInvestido;
-    valorizacaoImovel *= 1 + reajusteMensal;
-    valorizacaoImovel = parseFloat(valorizacaoImovel.toFixed(2));
-  }
+  const calcularValorizacaoExata = (
+    valorInicial: number,
+    taxaAnual: number,
+    meses: number
+  ): number => {
+    const taxaMensal = Math.pow(1 + taxaAnual / 100, 1 / 12) - 1;
+    let valorFinal = valorInicial;
+  
+    for (let mes = 1; mes <= meses; mes++) {
+      if (mes > 12) {
+        valorFinal *= (1 + taxaMensal);
+      }
+    }
+  
+    return parseFloat(valorFinal.toFixed(2));
+  };
+  useEffect(() => {
+    calcularResultados();
+  }, [qtdInvestida, capacidadeAporte, valorAluguel, rendimentoMensal, reajusteAnual, prazo, valorImovel]);
 
-  const melhorOpcao =
-    retornoInvestimento > valorizacaoImovel ? "ALUGAR" : "FINANCIAR";
+  const calcularResultados = () => {
+    const disponivel = capacidadeAporte - valorAluguel;
+    setQuantidadeDisponivel(disponivel);
+
+    // 1. Cálculo do Retorno dos Investimentos
+    let saldoInvestido = qtdInvestida;
+    const taxaMensalInvest = rendimentoMensal / 100;
+    
+    for (let mes = 1; mes <= prazo; mes++) {
+      saldoInvestido = saldoInvestido * (1 + taxaMensalInvest) + disponivel;
+    }
+    setRetornoInvestimento(parseFloat(saldoInvestido.toFixed(2)));
+
+    // 2. Cálculo da Valorização do Imóvel com taxa ajustada
+    const valorizacao = calcularValorizacaoExata(valorImovel, reajusteAnual, prazo);
+    setValorizacaoImovel(parseFloat(valorizacao.toFixed(2)));
+
+    
+
+    // 3. Determinação da melhor opção
+    setMelhorOpcao(saldoInvestido > valorizacao ? "ALUGAR" : "FINANCIAR");
+  };
+
   const corOpcao = melhorOpcao === "ALUGAR" ? "#afc74e" : "#da1616";
 
   return (
@@ -68,12 +101,8 @@ const AlugarOuFinanciar: React.FC = () => {
               <input
                 type="text"
                 value={formatCurrency(capacidadeAporte)}
-                onChange={(e) =>
-                  setCapacidadeAporte(parseCurrency(e.target.value))
-                }
-                onBlur={(e) =>
-                  setCapacidadeAporte(parseCurrency(e.target.value))
-                }
+                onChange={(e) => setCapacidadeAporte(parseCurrency(e.target.value))}
+                onBlur={(e) => setCapacidadeAporte(parseCurrency(e.target.value))}
               />
             </td>
           </tr>
@@ -120,7 +149,7 @@ const AlugarOuFinanciar: React.FC = () => {
               />
             </td>
           </tr>
-          <tr>
+          {/* <tr>
             <td>Valor do Imóvel</td>
             <td>
               <input
@@ -130,7 +159,7 @@ const AlugarOuFinanciar: React.FC = () => {
                 onBlur={(e) => setValorImovel(parseCurrency(e.target.value))}
               />
             </td>
-          </tr>
+          </tr> */}
           <tr>
             <td>Quantidade disponível para investir</td>
             <td>{formatCurrency(quantidadeDisponivel)}</td>
@@ -145,27 +174,23 @@ const AlugarOuFinanciar: React.FC = () => {
           </tr>
           <tr>
             <td>Você consegue financiar?</td>
-            <td
-              style={{
-                backgroundColor: consegueFinanciar ? "#afc74e" : "#da1616",
-                fontWeight: "bold",
-                textAlign: "center",
-                color: "white",
-              }}
-            >
+            <td style={{
+              backgroundColor: consegueFinanciar ? "#afc74e" : "#da1616",
+              fontWeight: "bold",
+              textAlign: "center",
+              color: "white",
+            }}>
               {consegueFinanciar ? "SIM" : "NÃO"}
             </td>
           </tr>
           <tr>
             <td>Alugar ou Financiar?</td>
-            <td
-              style={{
-                backgroundColor: corOpcao,
-                fontWeight: "bold",
-                textAlign: "center",
-                color: "white",
-              }}
-            >
+            <td style={{
+              backgroundColor: corOpcao,
+              fontWeight: "bold",
+              textAlign: "center",
+              color: "white",
+            }}>
               {melhorOpcao}
             </td>
           </tr>

@@ -37,44 +37,49 @@ export default function HowMuch() {
 
   const [mostrarTabela, setMostrarTabela] = useState(true);
 
-  function calcularAporteCrescente() {
+  function calcularAporteComPMT() {
     const rentabilidadeMensal =
       Math.pow(1 + dados.rentabilidadeAnual / 100, 1 / 12) - 1;
+
+    // Calcula a taxa mensal de inflação
     const inflacaoMensal = Math.pow(1 + dados.inflacaoAnual / 100, 1 / 12) - 1;
-    const rentabilidadeReal =
+
+    // Calcula a rentabilidade real mensal
+    const rentabilidadeRealMensal =
       (1 + rentabilidadeMensal) / (1 + inflacaoMensal) - 1;
 
-    const valorDesejadoAjustado =
-      dados.valorDesejado * Math.pow(1 + inflacaoMensal, dados.tempoMeses);
+    const valorDesejado = dados.valorDesejado;
+    const valorInicial = dados.valorInicial;
+    const periodoMeses = dados.tempoMeses;
+    const taxaMensal = rentabilidadeRealMensal;
 
-    let aporteInicial =
-      (valorDesejadoAjustado -
-        dados.valorInicial *
-          Math.pow(1 + rentabilidadeMensal, dados.tempoMeses)) /
-      (((Math.pow(1 + rentabilidadeMensal, dados.tempoMeses) - 1) /
-        rentabilidadeMensal) *
-        (1 + inflacaoMensal));
+    // Fórmula correta para calcular o PMT para valor futuro
+    const pmt =
+      (valorDesejado - valorInicial * Math.pow(1 + taxaMensal, periodoMeses)) *
+      (taxaMensal / (Math.pow(1 + taxaMensal, periodoMeses) - 1));
 
-    let total = dados.valorInicial;
+    // Cálculo da tabela de amortização
+    let saldo = valorInicial;
     let novaTabela = [];
 
-    for (let mes = 1; mes <= dados.tempoMeses; mes++) {
-      let aporte = aporteInicial * Math.pow(1 + inflacaoMensal, mes);
-      const juros = (total + aporte) * rentabilidadeMensal;
-      total += aporte + juros;
+    for (let mes = 1; mes <= periodoMeses; mes++) {
+      const juros = saldo * taxaMensal;
+      const aporte = Math.abs(pmt);
+      saldo += aporte + juros;
+
       novaTabela.push({
         mes,
-        valorInicial: total - aporte - juros,
-        aporte,
+        valorInicial: saldo - aporte - juros,
+        aporte: aporte,
         juros,
-        total,
+        total: saldo,
       });
     }
 
     setDados((prev) => ({
       ...prev,
-      rentabilidadeReal: parseFloat((rentabilidadeReal * 100).toFixed(5)),
-      aporteNecessario: parseFloat(Math.abs(aporteInicial).toFixed(2)),
+      rentabilidadeReal: parseFloat((rentabilidadeRealMensal * 100).toFixed(5)),
+      aporteNecessario: parseFloat(Math.abs(pmt).toFixed(2)),
     }));
 
     setTabela(novaTabela);
@@ -94,13 +99,15 @@ export default function HowMuch() {
   }
 
   function desformatarReal(valor: string): number {
-    return Number(
-      valor
-        .replace(/\s/g, "")
-        .replace("R$", "")
-        .replace(/\./g, "")
-        .replace(",", ".")
-    ) || 0;
+    return (
+      Number(
+        valor
+          .replace(/\s/g, "")
+          .replace("R$", "")
+          .replace(/\./g, "")
+          .replace(",", ".")
+      ) || 0
+    );
   }
 
   return (
@@ -180,7 +187,7 @@ export default function HowMuch() {
           className="border p-2 w-full rounded"
         />
       </div>
-      <button onClick={calcularAporteCrescente} className="calculateButton">
+      <button onClick={calcularAporteComPMT} className="calculateButton">
         Calcular
       </button>
 
@@ -191,11 +198,12 @@ export default function HowMuch() {
             <p className="text-lg font-bold">
               Valor Desejado Ajustado:{" "}
               {formatarParaReal(
-                dados.valorDesejado * Math.pow(1 + dados.inflacaoAnual / 100, dados.tempoMeses / 12)
+                dados.valorDesejado *
+                  Math.pow(1 + dados.inflacaoAnual / 100, dados.tempoMeses / 12)
               )}
             </p>
             <p className="text-md">
-              Aporte Inicial Necessário:{" "}
+              Aporte Mensal Necessário:{" "}
               {formatarParaReal(dados.aporteNecessario)}
             </p>
           </div>
@@ -213,11 +221,21 @@ export default function HowMuch() {
           <table className="mt-4 w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-200">
-                <th className="classListTable border border-gray-300 p-2">Mês</th>
-                <th className="classListTable border border-gray-300 p-2">Valor Inicial</th>
-                <th className="classListTable border border-gray-300 p-2">Aporte</th>
-                <th className="classListTable border border-gray-300 p-2">Juros</th>
-                <th className="classListTable border border-gray-300 p-2">Total Acumulado</th>
+                <th className="classListTable border border-gray-300 p-2">
+                  Mês
+                </th>
+                <th className="classListTable border border-gray-300 p-2">
+                  Valor Inicial
+                </th>
+                <th className="classListTable border border-gray-300 p-2">
+                  Aporte
+                </th>
+                <th className="classListTable border border-gray-300 p-2">
+                  Juros
+                </th>
+                <th className="classListTable border border-gray-300 p-2">
+                  Total Acumulado
+                </th>
               </tr>
             </thead>
             <tbody>

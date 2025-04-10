@@ -9,10 +9,11 @@ import Financial from "./pages/Financial";
 import Home from "./pages/Home";
 import Simulator from "./pages/Simulator.tsx";
 import InflationGraphic from "./pages/InflationGraphic";
+import BudgetSuggestion from "./pages/budgetSuggestion.tsx";
 
 function App() {
   return (
-    <Router basename="/Perini"> 
+    <Router basename="/Perini">
       <div className="container">
         <Header />
         <Routes>
@@ -20,6 +21,7 @@ function App() {
           <Route path="/investimento" element={<Simulator />} />
           <Route path="/financial" element={<Financial />} />
           <Route path="/gráfico" element={<InflationGraphic />} />
+          <Route path="/orçamento" element={<BudgetSuggestion />} />
         </Routes>
       </div>
     </Router>

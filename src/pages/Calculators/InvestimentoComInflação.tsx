@@ -3,14 +3,30 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 
-import './calculatorStyles/InvestimentoComInflação.css'
+import './calculatorStyles/InvestimentoComInflação.css';
 
 export default function InvestimentoInflacao() {
   const [valorInicial, setValorInicial] = useState(1000000);
-  const [taxaAnual, setTaxaAnual] = useState(0.5); // % ao ano
-  const [inflacaoAnual, setInflacaoAnual] = useState(2); // % ao ano
-  const [tempo, setTempo] = useState(30); // em anos
-  const [mostrarTabela, setMostrarTabela] = useState(true); // toggle da tabela
+  const [valorInput, setValorInput] = useState("1000000");
+
+  const [taxaAnual, setTaxaAnual] = useState(0.5);
+  const [inflacaoAnual, setInflacaoAnual] = useState(2);
+  const [tempo, setTempo] = useState(30);
+  const [mostrarTabela, setMostrarTabela] = useState(true);
+
+  const handleValorInicialChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/[^\d]/g, '');
+    setValorInput(rawValue);
+    setValorInicial(Number(rawValue));
+  };
+
+  const formatarValorInicial = () => {
+    setValorInput(valorInicial.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2
+    }));
+  };
 
   const dadosTabela = [];
   let valorAcumulado = valorInicial;
@@ -18,7 +34,6 @@ export default function InvestimentoInflacao() {
 
   for (let ano = 1; ano <= tempo; ano++) {
     valorAcumulado *= 1 + taxaAnual / 100;
-
     const inflacaoAcumulada = Math.pow(1 + inflacaoAnual / 100, ano);
     const valorAjInflacao = valorInicial * inflacaoAcumulada;
     const valorPresente = valorAcumulado / inflacaoAcumulada;
@@ -40,16 +55,24 @@ export default function InvestimentoInflacao() {
 
       <div className="investimento-input-group">
         <label>Valor investido:</label>
-        <input type="number" value={valorInicial} onChange={(e) => setValorInicial(Number(e.target.value))} />
+        <input
+          type="text"
+          value={valorInput}
+          onChange={handleValorInicialChange}
+          onBlur={formatarValorInicial}
+        />
       </div>
+
       <div className="investimento-input-group">
         <label>Taxa de rentabilidade (% ao <strong>ano</strong>):</label>
         <input type="number" value={taxaAnual} onChange={(e) => setTaxaAnual(Number(e.target.value))} />
       </div>
+
       <div className="investimento-input-group">
         <label>Inflação (% ao ano):</label>
         <input type="number" value={inflacaoAnual} onChange={(e) => setInflacaoAnual(Number(e.target.value))} />
       </div>
+
       <div className="investimento-input-group">
         <label>Tempo (anos):</label>
         <input type="number" value={tempo} onChange={(e) => setTempo(Number(e.target.value))} />
@@ -63,10 +86,9 @@ export default function InvestimentoInflacao() {
       </button>
 
       {mostrarTabela && (
-        <>
         <div className={`investimento-tabela-wrapper ${mostrarTabela ? 'show' : 'hide'}`}>
           <h3 className="investimento-subtitulo">Tabela</h3>
-          <table className="investimento-table" >
+          <table className="investimento-table">
             <thead>
               <tr className="investimento-table-header">
                 <th>Ano</th>
@@ -88,8 +110,7 @@ export default function InvestimentoInflacao() {
               ))}
             </tbody>
           </table>
-          </div>
-        </>
+        </div>
       )}
 
       <h3 className="investimento-subtitulo">Gráfico</h3>
@@ -105,4 +126,5 @@ export default function InvestimentoInflacao() {
         </LineChart>
       </ResponsiveContainer>
     </div>
-  );}
+  );
+}

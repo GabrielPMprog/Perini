@@ -23,6 +23,8 @@ function Header() {
           <li><a href="/Perini/financial" onClick={() => setMenuOpen(false)}>FINANCIAMENTO X ALUGUEL</a></li>
           <li><a href="/Perini/investimento" onClick={() => setMenuOpen(false)}>PLANILHA MILHÃO</a></li>
           <li><a href="/Perini/gráfico" onClick={() => setMenuOpen(false)}>GRÁFICO INFLAÇÃO</a></li>
+          <li><a href="/Perini/orçamento" onClick={() => setMenuOpen(false)}>SUGESTÃO DE ORÇAMENTO</a></li>
+
         </ul>
       </nav>
     </div>

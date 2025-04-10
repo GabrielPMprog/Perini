@@ -24,14 +24,35 @@ justify-content: center;
 .homeTextContainer p{
   font-family: sans-serif;
 }
+.homeTextContainerSubtitle{
+
+  display: flex;
+  flex-direction: row;
+text-align: center;
+align-items: center;
+justify-content: end;
+gap: 15px;
+}
+
+.homeTextContainerSubtitle h4 {
+  text-align: center;
+  padding-top: 0.5em;
+  font-size: 1em;
+}
 
 @media (max-width: 768px) {
 
-.homeTextContainer{
+.homeTextContainerSubtitle{
+  flex-direction: column;
+}
+
+  .homeTextContainer{
 
 align-items: center
 
 }
+
+
 
   .homeTextContainer h1{
     font-size: 1.5em;

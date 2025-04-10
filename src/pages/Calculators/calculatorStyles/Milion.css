@@ -98,3 +98,9 @@ height: fit-content;
     font-size: 0.95rem;
   }
 }
+
+@media (max-width:768px) {
+  .simulador-container{
+    width: 90vw;
+  }
+}

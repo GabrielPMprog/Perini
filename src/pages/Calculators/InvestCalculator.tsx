@@ -6,6 +6,8 @@ const formatCurrency = (value: number): string => {
   return value.toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   });
 };
 
@@ -20,8 +22,9 @@ const InvestCalculator: React.FC = () => {
   }
 
   const [qtdInvestida, setQtdInvestida] = useState<number>(0);
-  const [capacidadeAporte, setCapacidadeAporte] = useState<number>(3500);
-  const [rentabilidade, setRentabilidade] = useState<number>(7);
+  const [capacidadeAporte, setCapacidadeAporte] = useState<number>(3100);
+  const [capacidadeAporteTexto, setCapacidadeAporteTexto] = useState<string>(formatCurrency(3100));
+  const [rentabilidade, setRentabilidade] = useState<number>(1);
   const [reajusteAnual, setReajusteAnual] = useState<number>(5);
   const [valeFinanciar, setValeFinanciar] = useState<boolean>(true);
 
@@ -37,22 +40,22 @@ const InvestCalculator: React.FC = () => {
   ): number => {
     const valorFuturo =
       PV * Math.pow(1 + r, n) + PMT * ((Math.pow(1 + r, n) - 1) / r);
-    return valorFuturo;
+    return parseFloat(valorFuturo.toFixed(2));
   };
 
   const calcularValorizacaoImovel = (
     valorInicial: number,
-    reajusteAnual: number,
-    prazo: number
+    taxaAnual: number,
+    prazoMeses: number
   ): number => {
-    const reajusteMensal = Math.pow(1 + reajusteAnual, 1 / 12) - 1;
-    let valorFinal = valorInicial;
-    for (let mes = 1; mes <= prazo; mes++) {
-      valorFinal *= 1 + reajusteMensal;
-      valorFinal = parseFloat(valorFinal.toFixed(2)); // Arredondar a cada iteração
-    }
-    return valorFinal;
+    const anos = Math.floor(prazoMeses / 12);
+    const valorFinal = valorInicial * Math.pow(1 + taxaAnual, Math.max(0, anos - 1));
+    return parseFloat(valorFinal.toFixed(2));
   };
+
+  useEffect(() => {
+    setCapacidadeAporteTexto(formatCurrency(capacidadeAporte));
+  }, [capacidadeAporte]);
 
   useEffect(() => {
     const retornoInvestimento = calcularValorFuturo(
@@ -61,20 +64,15 @@ const InvestCalculator: React.FC = () => {
       prazo,
       quantidadeDisponivel
     );
+
     const valorizacaoImovel = calcularValorizacaoImovel(
       valorImovel,
       parsePercentage(reajusteAnual),
       prazo
     );
+
     setValeFinanciar(retornoInvestimento > valorizacaoImovel);
-  }, [
-    qtdInvestida,
-    rentabilidade,
-    prazo,
-    quantidadeDisponivel,
-    valorImovel,
-    reajusteAnual,
-  ]);
+  }, [qtdInvestida, rentabilidade, prazo, quantidadeDisponivel, valorImovel, reajusteAnual]);
 
   const retornoInvestimento = calcularValorFuturo(
     qtdInvestida,
@@ -82,6 +80,7 @@ const InvestCalculator: React.FC = () => {
     prazo,
     quantidadeDisponivel
   );
+
   const valorizacaoImovel = calcularValorizacaoImovel(
     valorImovel,
     parsePercentage(reajusteAnual),
@@ -107,9 +106,17 @@ const InvestCalculator: React.FC = () => {
             <td>Capacidade de Aporte</td>
             <td>
               <input
-                type="number"
-                value={capacidadeAporte}
-                onChange={(e) => setCapacidadeAporte(Number(e.target.value))}
+                type="text"
+                value={capacidadeAporteTexto}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/\D/g, "");
+                  const parsed = parseFloat(raw) / 100;
+                  setCapacidadeAporte(parsed || 0);
+                  setCapacidadeAporteTexto(e.target.value);
+                }}
+                onBlur={() => {
+                  setCapacidadeAporteTexto(formatCurrency(capacidadeAporte));
+                }}
               />
             </td>
           </tr>
@@ -163,11 +170,15 @@ const InvestCalculator: React.FC = () => {
           </tr>
           <tr>
             <td>Retorno dos Investimentos</td>
-            <td>{formatCurrency(retornoInvestimento)}</td>
+            <td>
+              <span>{formatCurrency(retornoInvestimento)}</span>
+            </td>
           </tr>
           <tr>
             <td>Valorização do Imóvel</td>
-            <td>{formatCurrency(valorizacaoImovel)}</td>
+            <td>
+              <span>{formatCurrency(valorizacaoImovel)}</span>
+            </td>
           </tr>
           <tr>
             <td>Vale a pena financiar?</td>
