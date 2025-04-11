@@ -108,6 +108,10 @@ color: white;
  overflow: hidden;
 }
 
+.investimento-resultados{
+  padding: 10px 0px;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .investimento-container {

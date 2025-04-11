@@ -4,6 +4,30 @@ margin-top: 10vh;
 
 }
 
+.botao-voltar-topo {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  background-color: #afc74e;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.botao-voltar-topo:hover {
+  background-color: #475800;
+}
+
 @media (max-width: 900px) {
     .mainSimulatorContainer{
         flex-direction: column;

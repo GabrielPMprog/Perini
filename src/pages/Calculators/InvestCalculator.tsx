@@ -22,6 +22,7 @@ const InvestCalculator: React.FC = () => {
   }
 
   const [qtdInvestida, setQtdInvestida] = useState<number>(0);
+  const [qtdInvestidaTexto, setQtdInvestidaTexto] = useState<string>(formatCurrency(0));
   const [capacidadeAporte, setCapacidadeAporte] = useState<number>(3100);
   const [capacidadeAporteTexto, setCapacidadeAporteTexto] = useState<string>(formatCurrency(3100));
   const [rentabilidade, setRentabilidade] = useState<number>(1);
@@ -56,6 +57,10 @@ const InvestCalculator: React.FC = () => {
   useEffect(() => {
     setCapacidadeAporteTexto(formatCurrency(capacidadeAporte));
   }, [capacidadeAporte]);
+
+  useEffect(() => {
+    setQtdInvestidaTexto(formatCurrency(qtdInvestida));
+  }, [qtdInvestida]);
 
   useEffect(() => {
     const retornoInvestimento = calcularValorFuturo(
@@ -96,9 +101,17 @@ const InvestCalculator: React.FC = () => {
             <td>Quantidade Investida</td>
             <td>
               <input
-                type="number"
-                value={qtdInvestida}
-                onChange={(e) => setQtdInvestida(Number(e.target.value))}
+                type="text"
+                value={qtdInvestidaTexto}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/\D/g, "");
+                  const parsed = parseFloat(raw) / 100;
+                  setQtdInvestida(parsed || 0);
+                  setQtdInvestidaTexto(e.target.value);
+                }}
+                onBlur={() => {
+                  setQtdInvestidaTexto(formatCurrency(qtdInvestida));
+                }}
               />
             </td>
           </tr>

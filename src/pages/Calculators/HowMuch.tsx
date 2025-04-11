@@ -32,6 +32,7 @@ export default function HowMuch() {
       aporte: number;
       juros: number;
       total: number;
+      valorDesejadoAjustado: number;
     }>
   >([]);
 
@@ -40,51 +41,54 @@ export default function HowMuch() {
   function calcularAporteComPMT() {
     const rentabilidadeMensal =
       Math.pow(1 + dados.rentabilidadeAnual / 100, 1 / 12) - 1;
-
-    // Calcula a taxa mensal de inflação
-    const inflacaoMensal = Math.pow(1 + dados.inflacaoAnual / 100, 1 / 12) - 1;
-
-    // Calcula a rentabilidade real mensal
+    const inflacaoMensal =
+      Math.pow(1 + dados.inflacaoAnual / 100, 1 / 12) - 1;
     const rentabilidadeRealMensal =
       (1 + rentabilidadeMensal) / (1 + inflacaoMensal) - 1;
-
+  
     const valorDesejado = dados.valorDesejado;
     const valorInicial = dados.valorInicial;
     const periodoMeses = dados.tempoMeses;
-    const taxaMensal = rentabilidadeRealMensal;
-
-    // Fórmula correta para calcular o PMT para valor futuro
+  
     const pmt =
-      (valorDesejado - valorInicial * Math.pow(1 + taxaMensal, periodoMeses)) *
-      (taxaMensal / (Math.pow(1 + taxaMensal, periodoMeses) - 1));
-
-    // Cálculo da tabela de amortização
+      (valorDesejado -
+        valorInicial * Math.pow(1 + rentabilidadeRealMensal, periodoMeses)) *
+      (rentabilidadeRealMensal /
+        (Math.pow(1 + rentabilidadeRealMensal, periodoMeses) - 1));
+  
     let saldo = valorInicial;
     let novaTabela = [];
-
+  
     for (let mes = 1; mes <= periodoMeses; mes++) {
-      const juros = saldo * taxaMensal;
-      const aporte = Math.abs(pmt);
-      saldo += aporte + juros;
-
+      const fatorInflacao = Math.pow(1 + inflacaoMensal, mes - 1);
+      const aporteCorrigido = pmt * fatorInflacao; // mantém sinal (positivo ou negativo)
+      const saldoAjustado = saldo + aporteCorrigido;
+      const juros = saldoAjustado * rentabilidadeMensal;
+      saldo = saldoAjustado + juros;
+  
+      const valorDesejadoAjustado =
+        valorDesejado * Math.pow(1 + inflacaoMensal, mes);
+  
       novaTabela.push({
         mes,
-        valorInicial: saldo - aporte - juros,
-        aporte: aporte,
+        valorInicial: saldo - aporteCorrigido - juros,
+        aporte: aporteCorrigido,
         juros,
         total: saldo,
+        valorDesejadoAjustado,
       });
     }
-
+  
     setDados((prev) => ({
       ...prev,
       rentabilidadeReal: parseFloat((rentabilidadeRealMensal * 100).toFixed(5)),
-      aporteNecessario: parseFloat(Math.abs(pmt).toFixed(2)),
+      aporteNecessario: parseFloat(pmt.toFixed(2)), // mantém sinal original
     }));
-
+  
     setTabela(novaTabela);
     setMostrarTabela(true);
   }
+  
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -191,7 +195,7 @@ export default function HowMuch() {
         Calcular
       </button>
 
-      {dados.aporteNecessario > 0 && (
+      {dados.aporteNecessario !== 0 && (
         <>
           <div className="resultsContainer">
             <h3 className="font-semibold">Resultados:</h3>
@@ -236,6 +240,9 @@ export default function HowMuch() {
                 <th className="classListTable border border-gray-300 p-2">
                   Total Acumulado
                 </th>
+                <th className="classListTable border border-gray-300 p-2">
+                  Valor Desejado Ajustado
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -253,6 +260,9 @@ export default function HowMuch() {
                   </td>
                   <td className="border border-gray-300 p-2">
                     {formatarParaReal(linha.total)}
+                  </td>
+                  <td className="border border-gray-300 p-2">
+                    {formatarParaReal(linha.valorDesejadoAjustado)}
                   </td>
                 </tr>
               ))}

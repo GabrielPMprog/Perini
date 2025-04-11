@@ -78,6 +78,21 @@ export default function InvestimentoInflacao() {
         <input type="number" value={tempo} onChange={(e) => setTempo(Number(e.target.value))} />
       </div>
 
+      <div className="investimento-resultados">
+  <p>
+    <strong>Valor Final:</strong>{" "}
+    R$ {Number(dadosTabela[dadosTabela.length - 1]?.valorFinal || 0).toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+    })}
+  </p>
+  <p>
+    <strong>Valor Final Ajustado (Valor Presente):</strong>{" "}
+    R$ {Number(dadosTabela[dadosTabela.length - 1]?.valorPresente || 0).toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+    })}
+  </p>
+</div>
+
       <button
         className="investimento-toggle-btn"
         onClick={() => setMostrarTabela(!mostrarTabela)}

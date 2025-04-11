@@ -14,13 +14,24 @@ const LoanCalculator: React.FC = () => {
   const imovelContext = useContext(ImovelContext);
 
   if (!imovelContext) {
-    return null; // ou algum fallback
+    return null;
   }
 
-  const { valorImovel, setValorImovel, prazo, setPrazo, pagamento, setPagamento, totalPagamento, setTotalPagamento } = imovelContext;
+  const {
+    valorImovel,
+    setValorImovel,
+    prazo,
+    setPrazo,
+    pagamento,
+    setPagamento,
+    totalPagamento,
+    setTotalPagamento,
+  } = imovelContext;
+
   const [entrada, setEntrada] = useState<number>(6000);
   const [taxaJuros, setTaxaJuros] = useState<number>(0.8);
   const [isTableVisible, setIsTableVisible] = useState<boolean>(true);
+  const [tabelaFinanciamento, setTabelaFinanciamento] = useState<Parcela[]>([]);
 
   const financiamento = valorImovel - entrada;
   const amortizacaoMensal = financiamento / prazo;
@@ -36,48 +47,52 @@ const LoanCalculator: React.FC = () => {
     return Number(value.replace(/\D/g, "")) / 100;
   };
 
-  let totalPago = 0;
-  let totalJuros = 0;
-
-  const gerarTabela = (): Parcela[] => {
-    let saldoDevedor = financiamento;
-    let tabela: Parcela[] = [];
-    for (let mes = 1; mes <= prazo; mes++) {
-      const taxaJurosMensal = taxaJuros / 100;
-      let juros = saldoDevedor * taxaJurosMensal;
-      let pagamentoMensal = amortizacaoMensal + juros;
-      saldoDevedor -= amortizacaoMensal;
-      totalPago += pagamentoMensal;
-      totalJuros += juros;
-      tabela.push({
-        mes,
-        saldoDevedor,
-        pagamento: pagamentoMensal,
-        amortizacao: amortizacaoMensal,
-        juros,
-      });
-    }
-   
-    setTotalPagamento(totalPago);
-    return tabela;
-  };
-
   useEffect(() => {
-    const tabelaFinanciamento = gerarTabela();
-    if (tabelaFinanciamento.length > 0) {
-      setPagamento(tabelaFinanciamento[0].pagamento);
-    }
-  }, [valorImovel, entrada, taxaJuros, prazo]);
+    const gerarTabela = (): Parcela[] => {
+      let saldoDevedor = financiamento;
+      const novaTabela: Parcela[] = [];
+      let totalPago = 0;
+      let totalJuros = 0;
 
-  const tabelaFinanciamento = gerarTabela();
+      for (let mes = 1; mes <= prazo; mes++) {
+        const taxaJurosMensal = taxaJuros / 100;
+        const juros = saldoDevedor * taxaJurosMensal;
+        const pagamentoMensal = amortizacaoMensal + juros;
+        saldoDevedor -= amortizacaoMensal;
+
+        totalPago += pagamentoMensal;
+        totalJuros += juros;
+
+        novaTabela.push({
+          mes,
+          saldoDevedor: saldoDevedor < 0 ? 0 : saldoDevedor,
+          pagamento: pagamentoMensal,
+          amortizacao: amortizacaoMensal,
+          juros,
+        });
+      }
+
+      setTotalPagamento(Number(totalPago.toFixed(2)));
+      if (novaTabela.length > 0) {
+        setPagamento(Number(novaTabela[0].pagamento.toFixed(2)));
+      }
+      return novaTabela;
+    };
+
+    const novaTabela = gerarTabela();
+    setTabelaFinanciamento(novaTabela);
+  }, [valorImovel, entrada, taxaJuros, prazo]);
 
   const handleToggleTable = () => {
     setIsTableVisible(!isTableVisible);
   };
 
+  const totalJuros = tabelaFinanciamento.reduce((acc, parcela) => acc + parcela.juros, 0);
+
   return (
     <div className="financiamento-container">
       <h2>SIMULADOR DE FINANCIAMENTO</h2>
+
       <label>
         Valor do Imóvel:
         <input
@@ -87,6 +102,7 @@ const LoanCalculator: React.FC = () => {
           onBlur={(e) => setValorImovel(parseCurrency(e.target.value))}
         />
       </label>
+
       <label>
         Entrada:
         <input
@@ -96,6 +112,7 @@ const LoanCalculator: React.FC = () => {
           onBlur={(e) => setEntrada(parseCurrency(e.target.value))}
         />
       </label>
+
       <label>
         Taxa de Juros (ao mês):
         <input
@@ -104,6 +121,7 @@ const LoanCalculator: React.FC = () => {
           onChange={(e) => setTaxaJuros(Number(e.target.value))}
         />
       </label>
+
       <label>
         Prazo (meses):
         <input
@@ -123,33 +141,35 @@ const LoanCalculator: React.FC = () => {
         {isTableVisible ? "Ocultar Tabela" : "Mostrar Tabela"}
       </button>
 
-      <div className={`table-container ${isTableVisible ? "visible" : "hidden"}`}>
-        <h3>Tabela de Financiamento</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Mês</th>
-              <th>Saldo Devedor</th>
-              <th>Pagamento</th>
-              <th>Amortização</th>
-              <th>Juros</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tabelaFinanciamento.map(
-              ({ mes, saldoDevedor, pagamento, amortizacao, juros }) => (
-                <tr key={mes} className="loanTableResult">
-                  <td>{mes}</td>
-                  <td>{formatCurrency(saldoDevedor)}</td>
-                  <td>{formatCurrency(pagamento)}</td>
-                  <td>{formatCurrency(amortizacao)}</td>
-                  <td>{formatCurrency(juros)}</td>
-                </tr>
-              )
-            )}
-          </tbody>
-        </table>
-      </div>
+      {isTableVisible && (
+        <div className="table-container visible">
+          <h3>Tabela de Financiamento</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Mês</th>
+                <th>Saldo Devedor</th>
+                <th>Pagamento</th>
+                <th>Amortização</th>
+                <th>Juros</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tabelaFinanciamento.map(
+                ({ mes, saldoDevedor, pagamento, amortizacao, juros }) => (
+                  <tr key={mes} className="loanTableResult">
+                    <td>{mes}</td>
+                    <td>{formatCurrency(saldoDevedor)}</td>
+                    <td>{formatCurrency(pagamento)}</td>
+                    <td>{formatCurrency(amortizacao)}</td>
+                    <td>{formatCurrency(juros)}</td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,6 +1,7 @@
+import { useEffect, useState } from "react";
 import "./styles/Financial.css";
 
-//CONTEXT
+// CONTEXT
 import { ImovelProvider } from "./Calculators/context/imovelContext";
 
 // CALCULADORAS
@@ -9,9 +10,23 @@ import RentCalculator from "./Calculators/RentCalculator";
 import InvestCalculator from "./Calculators/InvestCalculator";
 
 function Financial() {
+  const [mostrarBotaoTopo, setMostrarBotaoTopo] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setMostrarBotaoTopo(window.scrollY > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const rolarParaTopo = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div className="financialContainer">
-      <h1>Aluguel X Financiamento</h1>
       <div className="calculatorContainer">
         <ImovelProvider>
           <LoanCalculator />
@@ -21,6 +36,16 @@ function Financial() {
           </div>
         </ImovelProvider>
       </div>
+
+      {mostrarBotaoTopo && (
+        <button
+          onClick={rolarParaTopo}
+          className="botao-voltar-topo"
+          aria-label="Voltar ao topo"
+        >
+          ↑
+        </button>
+      )}
     </div>
   );
 }
