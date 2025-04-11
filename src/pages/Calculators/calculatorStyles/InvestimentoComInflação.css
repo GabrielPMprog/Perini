@@ -131,6 +131,6 @@ color: white;
   }
 
   .graphic {
-    overflow-x: scroll;
+    overflow-x: visible;
   }
 }

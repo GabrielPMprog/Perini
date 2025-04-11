@@ -130,7 +130,7 @@ export default function InvestimentoInflacao() {
 
       <h3 className="investimento-subtitulo">Gráfico</h3>
       <ResponsiveContainer width="100%" height={400} className="graphic">
-        <LineChart data={dadosTabela}>
+        <LineChart data={dadosTabela} className="graphic">
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="ano" />
           <YAxis />
