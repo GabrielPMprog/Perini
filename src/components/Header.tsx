@@ -24,6 +24,7 @@ function Header() {
           <li><a href="/Perini/investimento" onClick={() => setMenuOpen(false)}>PLANILHA MILHÃO</a></li>
           <li><a href="/Perini/gráfico" onClick={() => setMenuOpen(false)}>GRÁFICO INFLAÇÃO</a></li>
           <li><a href="/Perini/orçamento" onClick={() => setMenuOpen(false)}>SUGESTÃO DE ORÇAMENTO</a></li>
+          <li><a href="/Perini/formadepagamento" onClick={() => setMenuOpen(false)}>À VISTA OU A PRAZO?</a></li>
 
         </ul>
       </nav>

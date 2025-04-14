@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import Simulator from "./pages/Simulator.tsx";
 import InflationGraphic from "./pages/InflationGraphic";
 import BudgetSuggestion from "./pages/budgetSuggestion.tsx";
+import InCash from "./pages/InCash.tsx";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
           <Route path="/financial" element={<Financial />} />
           <Route path="/gráfico" element={<InflationGraphic />} />
           <Route path="/orçamento" element={<BudgetSuggestion />} />
+          <Route path="/formadepagamento" element={<InCash />} />
+
         </Routes>
       </div>
     </Router>

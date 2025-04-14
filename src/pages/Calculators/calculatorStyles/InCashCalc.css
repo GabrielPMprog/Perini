@@ -1,0 +1,154 @@
+.inCashContainer {
+  padding: 2rem;
+  max-width: 70%;
+  margin: 2rem auto;
+  background: #f9f9f9;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", sans-serif;
+  box-sizing: border-box;
+
+}
+
+.inCashTitle {
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+/* Seções */
+.inCashSection {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.inCashSectionTitle {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+/* Labels e Inputs */
+.inCashLabel {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.inCashLabel input[type="number"],
+.inCashLabel input[type="text"] {
+  margin-top: 0.5rem;
+  padding: 0.6rem;
+  width: 100%;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+/* Checkbox */
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+/* Botão Avançado */
+.inCashAvancadoBtn {
+  padding: 0.6rem 1rem;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.inCashAvancadoContainer {
+  margin-top: 1rem;
+}
+
+/* Grupo de rádio */
+.inCashRadioGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.inCashRadioGroup label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Resultados */
+.inCashResults {
+  padding: 1rem 0;
+}
+
+.inCashResult {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Gráfico */
+.inCashChartContainer {
+  width: 100%;
+  overflow-x: auto;
+  padding: 1rem 0;
+}
+
+.inCashChart{
+  overflow-x: visible;
+}
+
+.graph-caption {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  color: #777;
+}
+
+/* Media Queries */
+@media (max-width: 1024px) {
+  .inCashContainer {
+    max-width: 90%;
+    padding: 1.5rem;
+  }
+
+  .inCashRadioGroup {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .inCashContainer {
+    padding: 1rem;
+    max-width: 95%;
+  }
+
+  .inCashSection {
+    padding: 0.8rem;
+  }
+
+  .inCashTitle {
+    font-size: 1.4rem;
+  }
+
+  .inCashSectionTitle {
+    font-size: 1.1rem;
+  }
+
+  .inCashLabel input {
+    font-size: 0.95rem;
+  }
+
+  .inCashResult {
+    font-size: 0.95rem;
+  }
+}

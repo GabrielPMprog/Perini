@@ -5,7 +5,7 @@ function Home() {
     <div className="homeContainer">
       <div className="homeTextContainer">
         <p>
-          Projeto produzido por um fã com inutito de disponibilizar as planilhas
+          Projeto produzido por um fã, com intuito de disponibilizar as planilhas
           do curso viver de renda para dispositivos móveis.
         </p>
         <div className="homeTextContainerSubtitle">
