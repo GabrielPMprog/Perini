@@ -36,19 +36,19 @@ function getIRRate(months: number) {
 }
 
 function InCashCalc() {
-  const isLargeScreen = window.innerWidth >= 800;
-
   const [valorCheio, setValorCheio] = useState(0);
   const [valorCheioInput, setValorCheioInput] = useState("");
 
   const [aplicarDesconto, setAplicarDesconto] = useState(false);
   const [desconto, setDesconto] = useState(0);
+  const [descontoInput, setDescontoInput] = useState("");
 
   const [quantidadeParcelas, setQuantidadeParcelas] = useState(1);
   const [mostrarAvancado, setMostrarAvancado] = useState(false);
   const [entrada, setEntrada] = useState(0);
   const [entradaInput, setEntradaInput] = useState("");
   const [taxaJurosFinanciamento, setTaxaJurosFinanciamento] = useState(0);
+  const [taxaJurosInput, setTaxaJurosInput] = useState("");
 
   const [investmentOption, setInvestmentOption] =
     useState<InvestmentOption>("nao-aplico");
@@ -63,7 +63,7 @@ function InCashCalc() {
   const valorParcelaAvancado =
     quantidadeParcelas > 0 && jurosMensalFinanciamento > 0
       ? principal *
-        (jurosMensalFinanciamento / 
+        (jurosMensalFinanciamento /
           (1 - Math.pow(1 + jurosMensalFinanciamento, -quantidadeParcelas)))
       : quantidadeParcelas > 0
       ? principal / quantidadeParcelas
@@ -82,8 +82,8 @@ function InCashCalc() {
 
   const calcularValorInvestido = () => {
     const valorInicialInvestido = mostrarAvancado
-      ? Math.max(0, valorVista - entrada)
-      : valorVista;
+      ? Math.max(0, valorCheio - entrada)
+      : valorCheio;
 
     let investedValue = valorInicialInvestido;
     const values = [investedValue];
@@ -96,6 +96,7 @@ function InCashCalc() {
 
     return values;
   };
+
   const calcularTotalParcelas = () => {
     const values = [mostrarAvancado ? entrada : 0];
     let total = values[0];
@@ -109,11 +110,13 @@ function InCashCalc() {
 
   const investedValues = calcularValorInvestido();
   const totalParcelas = calcularTotalParcelas();
+  const valorDesconto = aplicarDesconto ? valorCheio - valorVista : 0;
 
   const chartData = Array.from({ length: quantidadeParcelas + 1 }, (_, i) => ({
     month: i,
     investido: investedValues[i],
-    valorAVista: i === 0 ? valorVista : 0,
+    valorAVista:
+      valorDesconto > 0 ? valorDesconto * Math.pow(1 + monthlyYield, i) : 0,
   }));
 
   const pvParcelas = Array.from(
@@ -151,6 +154,8 @@ function InCashCalc() {
             value={
               valorCheioInput !== ""
                 ? valorCheioInput
+                : valorCheio === 0
+                ? ""
                 : valorCheio.toLocaleString("pt-BR", {
                     style: "currency",
                     currency: "BRL",
@@ -158,9 +163,7 @@ function InCashCalc() {
             }
             onChange={(e) => setValorCheioInput(e.target.value)}
             onBlur={() => {
-              const raw = valorCheioInput
-                .replace(/[^\d,]/g, "")
-                .replace(",", ".");
+              const raw = valorCheioInput.replace(/[^\d,]/g, "").replace(",", ".");
               const parsed = parseFloat(raw);
               setValorCheio(isNaN(parsed) ? 0 : parsed);
               setValorCheioInput("");
@@ -183,9 +186,24 @@ function InCashCalc() {
           <label className="inCashLabel">
             Desconto (%):
             <input
-              type="number"
-              value={desconto}
-              onChange={(e) => setDesconto(parseFloat(e.target.value) || 0)}
+              type="text"
+              value={
+                descontoInput !== ""
+                  ? descontoInput
+                  : desconto.toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                    }) + "%"
+              }
+              onChange={(e) => setDescontoInput(e.target.value)}
+              onBlur={() => {
+                const raw = descontoInput.replace(/[^\d,]/g, "").replace(",", ".");
+                const parsed = parseFloat(raw);
+                setDesconto(isNaN(parsed) ? 0 : parsed);
+                setDescontoInput("");
+              }}
+              onFocus={() => {
+                setDescontoInput(desconto.toString().replace(".", ","));
+              }}
             />
           </label>
         )}
@@ -244,11 +262,24 @@ function InCashCalc() {
             <label className="inCashLabel">
               Taxa de Juros (% a.m.):
               <input
-                type="number"
-                value={taxaJurosFinanciamento}
-                onChange={(e) =>
-                  setTaxaJurosFinanciamento(parseFloat(e.target.value) || 0)
+                type="text"
+                value={
+                  taxaJurosInput !== ""
+                    ? taxaJurosInput
+                    : taxaJurosFinanciamento.toLocaleString("pt-BR", {
+                        minimumFractionDigits: 2,
+                      }) + "%"
                 }
+                onChange={(e) => setTaxaJurosInput(e.target.value)}
+                onBlur={() => {
+                  const raw = taxaJurosInput.replace(/[^\d,]/g, "").replace(",", ".");
+                  const parsed = parseFloat(raw);
+                  setTaxaJurosFinanciamento(isNaN(parsed) ? 0 : parsed);
+                  setTaxaJurosInput("");
+                }}
+                onFocus={() => {
+                  setTaxaJurosInput(taxaJurosFinanciamento.toString().replace(".", ","));
+                }}
               />
             </label>
           </div>
@@ -260,6 +291,7 @@ function InCashCalc() {
             {Object.entries(investmentRates).map(([key, rate]) => (
               <label key={key}>
                 <input
+                  className="input-Radio-CashCalc"
                   type="radio"
                   name="investment"
                   value={key}

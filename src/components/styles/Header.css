@@ -54,6 +54,11 @@ nav {
   color: #afc74e;
 }
 
+.listItems a.activeLink {
+  color: #afc74e; /* destaque */
+  font-weight: bold;
+}
+
 /* MENU MOBILE DROPDOWN */
 @media (max-width: 768px) {
   .menuToggle {

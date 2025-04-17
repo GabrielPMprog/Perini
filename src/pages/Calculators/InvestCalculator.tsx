@@ -49,8 +49,16 @@ const InvestCalculator: React.FC = () => {
     taxaAnual: number,
     prazoMeses: number
   ): number => {
-    const anos = Math.floor(prazoMeses / 12);
-    const valorFinal = valorInicial * Math.pow(1 + taxaAnual, Math.max(0, anos - 1));
+    let valorFinal = valorInicial;
+    const reajusteAnual = 1 + taxaAnual;
+  
+    if (prazoMeses >= 13) {
+      const anosCompletos = Math.floor((prazoMeses - 1) / 12); // começa a contar do 2º ano (mês 13)
+      for (let i = 0; i < anosCompletos; i++) {
+        valorFinal *= reajusteAnual;
+      }
+    }
+  
     return parseFloat(valorFinal.toFixed(2));
   };
 
@@ -149,16 +157,7 @@ const InvestCalculator: React.FC = () => {
               />
             </td>
           </tr>
-          <tr>
-            <td>Pagamento Total</td>
-            <td>
-              <input
-                type="text"
-                value={formatCurrency(totalPagamento)}
-                readOnly
-              />
-            </td>
-          </tr>
+         
           <tr>
             <td>Rentabilidade dos investimentos (%)</td>
             <td>
@@ -181,10 +180,18 @@ const InvestCalculator: React.FC = () => {
               />
             </td>
           </tr>
+          
           <tr>
             <td>Retorno dos Investimentos</td>
             <td>
               <span>{formatCurrency(retornoInvestimento)}</span>
+            </td>
+          </tr>
+          <tr>
+            <td>Pagamento Total</td>
+            <td>
+              <span>{formatCurrency(totalPagamento)}</span>
+          
             </td>
           </tr>
           <tr>

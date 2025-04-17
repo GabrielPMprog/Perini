@@ -7,7 +7,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   font-family: "Segoe UI", sans-serif;
   box-sizing: border-box;
-
 }
 
 .inCashTitle {
@@ -59,6 +58,11 @@
   margin-right: 0.5rem;
 }
 
+.checkboxLabel input[type="checkbox"]:checked {
+  accent-color: #afc74e;
+  color: white;
+}
+
 /* Botão Avançado */
 .inCashAvancadoBtn {
   padding: 0.6rem 1rem;
@@ -104,7 +108,7 @@
   padding: 1rem 0;
 }
 
-.inCashChart{
+.inCashChart {
   overflow-x: visible;
 }
 
@@ -112,6 +116,17 @@
   margin-bottom: 1rem;
   font-size: 0.95rem;
   color: #777;
+}
+
+.input-Radio-CashCalc:checked {
+  accent-color: #afc74e;
+  border: none;
+}
+
+.inCashAvancadoBtn:hover {
+  transition: 0.5s;
+  background-color: #afc74e;
+  color: white;
 }
 
 /* Media Queries */
@@ -150,5 +165,9 @@
 
   .inCashResult {
     font-size: 0.95rem;
+  }
+
+  .inCashAvancadoBtn {
+    color: #afc74e;
   }
 }

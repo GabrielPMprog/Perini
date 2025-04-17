@@ -2,6 +2,8 @@ import React, { useState, useContext, useEffect } from "react";
 import { ImovelContext } from "./context/imovelContext";
 import "./calculatorStyles/loanCalculator.css";
 
+import { FaInfoCircle } from "react-icons/fa";
+
 interface Parcela {
   mes: number;
   saldoDevedor: number;
@@ -103,15 +105,39 @@ const LoanCalculator: React.FC = () => {
         />
       </label>
 
+      <div style={{ position: "relative", display: "inline-block", width: "100%" }}>
       <label>
         Entrada:
-        <input
-          type="text"
-          value={formatCurrency(entrada)}
-          onChange={(e) => setEntrada(parseCurrency(e.target.value))}
-          onBlur={(e) => setEntrada(parseCurrency(e.target.value))}
-        />
-      </label>
+  <input
+    type="text"
+    value={formatCurrency(entrada)}
+    onChange={(e) => setEntrada(parseCurrency(e.target.value))}
+    onBlur={(e) => setEntrada(parseCurrency(e.target.value))}
+    style={{ width: "100%", paddingRight: "30px" }} // espaço pro ícone
+  />
+  <button
+    onClick={() => {
+      const valorSugerido = valorImovel * 0.2;
+      setEntrada(valorSugerido);
+    }}
+    title="O valor geralmente é de 20% da valorização do imóvel"
+    style={{
+      position: "absolute",
+      right: "8px",
+      top: "68%",
+      transform: "translateY(-50%)",
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      padding: 0,
+      margin: 0,
+      color: "#afc74e",
+    }}
+  >
+    <FaInfoCircle size={16} />
+  </button>
+  </label> 
+</div>
 
       <label>
         Taxa de Juros (ao mês):

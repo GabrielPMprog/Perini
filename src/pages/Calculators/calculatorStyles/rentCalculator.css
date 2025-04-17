@@ -58,10 +58,29 @@
   margin: 10px 0;
 }
 
+.infoBall {
+  margin-left: 8px;
+  font-size: 14px;
+  cursor: help;
+  color: #888;
+  border-radius: 50%;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  text-align: center;
+  line-height: 18px;
+  border: 1px solid #aaa;
+  font-weight: bold;
+  background-color: #f4f4f4;
+overflow-x: visible;
+}
+
+
 /* RESPONSIVO */
 @media (max-width: 768px) {
   .rentContainer {
-    width: 90vw;
+    max-width: 90vw;
+    width: 100%;
     padding: 15px;
   }
 

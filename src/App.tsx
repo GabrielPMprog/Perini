@@ -21,8 +21,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/investimento" element={<Simulator />} />
           <Route path="/financial" element={<Financial />} />
-          <Route path="/gráfico" element={<InflationGraphic />} />
-          <Route path="/orçamento" element={<BudgetSuggestion />} />
+          <Route path="/grafico" element={<InflationGraphic />} />
+          <Route path="/orcamento" element={<BudgetSuggestion />} />
           <Route path="/formadepagamento" element={<InCash />} />
 
         </Routes>
