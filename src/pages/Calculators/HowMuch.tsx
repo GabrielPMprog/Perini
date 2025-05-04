@@ -41,34 +41,33 @@ export default function HowMuch() {
   function calcularAporteComPMT() {
     const rentabilidadeMensal =
       Math.pow(1 + dados.rentabilidadeAnual / 100, 1 / 12) - 1;
-    const inflacaoMensal =
-      Math.pow(1 + dados.inflacaoAnual / 100, 1 / 12) - 1;
+    const inflacaoMensal = Math.pow(1 + dados.inflacaoAnual / 100, 1 / 12) - 1;
     const rentabilidadeRealMensal =
       (1 + rentabilidadeMensal) / (1 + inflacaoMensal) - 1;
-  
+
     const valorDesejado = dados.valorDesejado;
     const valorInicial = dados.valorInicial;
     const periodoMeses = dados.tempoMeses;
-  
+
     const pmt =
       (valorDesejado -
         valorInicial * Math.pow(1 + rentabilidadeRealMensal, periodoMeses)) *
       (rentabilidadeRealMensal /
         (Math.pow(1 + rentabilidadeRealMensal, periodoMeses) - 1));
-  
+
     let saldo = valorInicial;
     let novaTabela = [];
-  
+
     for (let mes = 1; mes <= periodoMeses; mes++) {
       const fatorInflacao = Math.pow(1 + inflacaoMensal, mes - 1);
       const aporteCorrigido = pmt * fatorInflacao; // mantém sinal (positivo ou negativo)
       const saldoAjustado = saldo + aporteCorrigido;
       const juros = saldoAjustado * rentabilidadeMensal;
       saldo = saldoAjustado + juros;
-  
+
       const valorDesejadoAjustado =
         valorDesejado * Math.pow(1 + inflacaoMensal, mes);
-  
+
       novaTabela.push({
         mes,
         valorInicial: saldo - aporteCorrigido - juros,
@@ -78,17 +77,16 @@ export default function HowMuch() {
         valorDesejadoAjustado,
       });
     }
-  
+
     setDados((prev) => ({
       ...prev,
       rentabilidadeReal: parseFloat((rentabilidadeRealMensal * 100).toFixed(5)),
       aporteNecessario: parseFloat(pmt.toFixed(2)), // mantém sinal original
     }));
-  
+
     setTabela(novaTabela);
     setMostrarTabela(true);
   }
-  
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;

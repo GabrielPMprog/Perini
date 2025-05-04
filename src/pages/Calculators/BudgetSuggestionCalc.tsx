@@ -92,7 +92,7 @@ const BudgetSuggestionCalc: React.FC = () => {
   ))}
 </div>
 
-{/* GRÁFICO EM TELAS MAIORES */}
+
 <div className="pie-chart-wrapper pie-chart">
   <ResponsiveContainer width="100%" height={500} className="pie-chart">
   <PieChart margin={{ top: 20, right: 0, left: 0, bottom: 40 }} className="pie-chart">
