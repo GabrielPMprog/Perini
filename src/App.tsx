@@ -11,6 +11,7 @@ import Simulator from "./pages/Simulator.tsx";
 import InflationGraphic from "./pages/InflationGraphic";
 import BudgetSuggestion from "./pages/budgetSuggestion.tsx";
 import InCash from "./pages/InCash.tsx";
+import AveragePrice from "./pages/AveragePrice.tsx"; 
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
           <Route path="/grafico" element={<InflationGraphic />} />
           <Route path="/orcamento" element={<BudgetSuggestion />} />
           <Route path="/formadepagamento" element={<InCash />} />
-
+          <Route path="/precomedio" element={<AveragePrice />} />
         </Routes>
       </div>
     </Router>

@@ -13,6 +13,8 @@ function Header() {
     { href: "/Perini/grafico", label: "GRÁFICO INFLAÇÃO" },
     { href: "/Perini/orcamento", label: "SUGESTÃO DE ORÇAMENTO" },
     { href: "/Perini/formadepagamento", label: "À VISTA OU A PRAZO?" },
+    { href: "/Perini/precomedio", label: "PREÇO MÉDIO DAS AÇÕES" },
+
   ];
 
   return (
